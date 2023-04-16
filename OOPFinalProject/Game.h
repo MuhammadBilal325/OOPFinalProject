@@ -7,7 +7,7 @@ class Game
 private:
 	//Variables
 	//Window
-	int board[20][10]=
+	int board[20][10] =
 	{
 		{0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,0},
@@ -35,11 +35,12 @@ private:
 	sf::Event ev;
 	sf::RectangleShape Block;
 	sf::Sprite Board;
+	sf::Sprite Tiles[8];
+	sf::Texture Tiletextures[8];
 	sf::Texture BoardTexture;
 
 	bool quit = 0;
-	int timer = 0;
-	int timer2 = 0;
+	int timer = 0, Move = -1, Rotate = -1, speed = 15;
 	Tetrimino* CurrentBlock;
 public:
 	//Constructors and Destructors
