@@ -22,7 +22,6 @@ public:
 	}
 	bool IsControllable() { return controllable; }
 	void Fall(int board[20][10]) {
-		ResetTetrimino(board);
 		y++;
 		if (CheckBounds(board) || Checkintersection(board))
 		{
@@ -34,7 +33,7 @@ public:
 	int GetX() { return x; }
 	int GetY() { return y; }
 
-	bool Checkintersection(int board[][10])
+	bool Checkintersection(int board[][10]) //Returns true if tetrimino is intersecting. False if not intersecting
 	{
 		for (int i = y; i < y + 4 && i < 20; i++)
 			for (int j = x; j < x + 4 && j < 10; j++)
@@ -60,11 +59,9 @@ public:
 	void ShiftX(bool i, int board[][10]) {
 		if (controllable)
 		{
-			ResetTetrimino(board);
 			MoveX(i);
 			if (Checkintersection(board) || CheckBounds(board))
 				MoveX(!i);
-			SetTetrimino(board);
 		}
 	}
 	void SetTetrimino(int board[20][10]) {

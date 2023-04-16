@@ -37,10 +37,10 @@ private:
 	sf::Sprite Board;
 	sf::Texture BoardTexture;
 
+	bool quit = 0;
 	int timer = 0;
 	int timer2 = 0;
-	int blocknum = 0;
-	Tetrimino* Blocks = new Tetrimino[1];
+	Tetrimino* CurrentBlock;
 public:
 	//Constructors and Destructors
 	Game();
@@ -49,10 +49,13 @@ public:
 	const bool getWindowState() const;
 	//Functions
 	void PollEvents();
-	void CreateTetrimino();
+	template<typename T>void CreateTetrimino();
 	void UpdateBoard();
+	void CheckForLines();
+	void SwapUp(int row);
 	void Update();
 	void Render();
+	void Quit();
 	void PrintBoard();
 	void PrintBoardcout();
 };

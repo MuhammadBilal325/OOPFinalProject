@@ -1,12 +1,10 @@
 #include"Game.h"
-
-void IncreaseDynarray(Tetrimino*& arr, int s)
+template<typename T>
+void swap(T& t1, T& t2)
 {
-	Tetrimino* newarr = new Tetrimino[s + 1];
-	for (int i = 0; i < s; i++)
-		newarr[i] = arr[i];
-	delete[]arr;
-	arr = newarr;
+	T temp = t1;
+	t1 = t2;
+	t2 = temp;
 }
 Game::Game()
 {
@@ -20,25 +18,27 @@ Game::Game()
 	videoMode.width = 600;
 	window = new sf::RenderWindow(videoMode, "Tetris", sf::Style::Default);
 	window->setFramerateLimit(60);
-	CreateTetrimino();
+	CreateTetrimino<Ishape>();
 }
 
 Game::~Game()
 {
 	delete window;
-	delete[]Blocks;
+	delete CurrentBlock;
 }
 
 const bool Game::getWindowState() const
 {
 	return window->isOpen();
 }
+template<typename T>
 void Game::CreateTetrimino() {
-	Ishape NewBlock;
-	if (blocknum > 0)
-		IncreaseDynarray(Blocks, blocknum);
-	Blocks[blocknum] = NewBlock;
-	blocknum++;
+	T NewBlock;
+	delete CurrentBlock;
+	CurrentBlock = new T;
+	*CurrentBlock = NewBlock;
+	if (CurrentBlock->Checkintersection(board))
+		quit = true;
 }
 
 void Game::PollEvents()
@@ -48,40 +48,55 @@ void Game::PollEvents()
 		if (ev.type == sf::Event::Closed)
 			window->close();
 		if (ev.key.code == sf::Keyboard::Left)
-		{
-			Blocks[blocknum - 1].ShiftX(1,board);
-		}
+			if (!quit)
+				CurrentBlock->ShiftX(1, board);
 		if (ev.key.code == sf::Keyboard::Right)
-		{
-			Blocks[blocknum - 1].ShiftX(0,board);
-		}
-	}
-}
-void Game::UpdateBoard() {
-	for (int k = 0; k < blocknum; k++)
-	{
-		for (int i = 0; i < 20; i++)
-			for (int j = 0; j < 10; j++)
-				if (Blocks[k].GetX() == j)
-					if (Blocks[k].GetY() == i)
-						Blocks[k].SetTetrimino(board);
+			if (!quit)
+				CurrentBlock->ShiftX(0, board);
 	}
 }
 
+
+void Game::SwapUp(int row)
+{
+	for (int i = row; i > 0; i--)
+		for (int j = 0; j < 10; j++)
+			swap(board[i][j], board[i - 1][j]);
+}
+void Game::CheckForLines() {
+	bool continuos = 1;
+	for (int i = 0; i < 20; i++)
+	{
+		continuos = 1;
+		for (int j = 0; j < 10; j++)
+			if (board[i][j] == 0)
+				continuos = 0;
+		if (continuos)
+		{
+			for (int j = 0; j < 10; j++)
+				board[i][j] = 0;
+			SwapUp(i);
+			i--;
+		}
+	}
+}
 void Game::Update()
 {
 	PollEvents();  //Get user input
-	if(!Blocks[blocknum-1].IsControllable())
-		CreateTetrimino();
-	if (timer % 30 == 0) { 
-		timer = 0;
-		for (int i = 0; i < blocknum; i++)
-			if(Blocks[i].IsControllable())
-			Blocks[i].Fall(board);         //We make the blocks fall every 5 ticks
+	if (!quit)
+	{
+		if (!CurrentBlock->IsControllable()) {
+			CurrentBlock->SetTetrimino(board);
+			CreateTetrimino<Ishape>();
+		}
+		if (timer % 30 == 0) {
+			timer = 0;
+			CurrentBlock->Fall(board);         //We make the blocks fall every 30 ticks
+		}
+		CheckForLines();
+		timer++;
+		timer2++;
 	}
-	UpdateBoard();//Update board so new blocks can appear/disappear regardless of falling ticks	
-	timer++;
-	timer2++;
 }
 
 void Game::PrintBoard()
@@ -89,17 +104,27 @@ void Game::PrintBoard()
 	Block.setSize(sf::Vector2f(23, 23));
 	Block.setFillColor(sf::Color(255, 255, 255, 255));
 	window->draw(Board);
+	CurrentBlock->SetTetrimino(board);
 	for (int i = 0; i < 20; i++)
 		for (int j = 0; j < 10; j++)
 		{
-			Block.setPosition((j*36)+26.5,(i*36)+27);
+			Block.setPosition((j * 36) + 26.5, (i * 36) + 27);
 			if (board[i][j] == 0)
 				Block.setFillColor(sf::Color::White);
 			else if (board[i][j] == 1)
 				Block.setFillColor(sf::Color::Red);
 			window->draw(Block);
 		}
+	CurrentBlock->ResetTetrimino(board);
+	if (quit)
+		Quit();
 	window->draw(Block);
+}
+void Game::Quit() {
+	Block.setSize(sf::Vector2f(500, 300));
+	Block.setFillColor(sf::Color::Red);
+	Block.setPosition(50, 200);
+
 }
 void Game::Render()
 {
