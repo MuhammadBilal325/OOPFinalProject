@@ -38,9 +38,11 @@ private:
 	sf::Sprite Tiles[8];
 	sf::Texture Tiletextures[8];
 	sf::Texture BoardTexture;
-
-	bool quit = 0;
-	int timer = 0, Move = -1, Rotate = -1, speed = 15;
+	sf::Font font;
+	sf::Text scoreText,scoreNum;
+	std::string name;
+	bool quit = 0,fastfalling=0;
+	int timer = 0,timer2=0, Move = -1, speed = 60,usingspeed=60,score=0;
 	Tetrimino* CurrentBlock;
 public:
 	//Constructors and Destructors
@@ -54,10 +56,12 @@ public:
 	void UpdateBoard();
 	void CheckForLines();
 	void SwapUp(int row);
+	void SetName(std::string n);
 	void Update();
 	void Render();
 	void Quit();
 	void PrintBoard();
+	void PrintScore();
 	void PrintBoardcout();
 };
 

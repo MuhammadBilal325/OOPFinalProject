@@ -22,6 +22,13 @@ Game::Game()
 		}
 		Tiles[i] = sf::Sprite(Tiletextures[i]);
 	}
+	if (!font.loadFromFile("./Textures/1up.ttf")) {
+		std::cout << "Error loading font file" << std::endl;
+	}
+	scoreText.setFont(font);
+	scoreNum.setFont(font);
+	scoreText.setPosition(400, 250);
+	scoreNum.setPosition(400, 300);
 	Board = sf::Sprite(BoardTexture);
 	Board.setScale(1, 1);
 	Board.setPosition(20, 20);
@@ -57,18 +64,30 @@ void Game::PollEvents()
 	{
 		if (ev.type == sf::Event::Closed)
 			window->close();
-		if (ev.key.code == sf::Keyboard::Left)
+		else if (ev.key.code == sf::Keyboard::Left) {
 			if (!quit)
 				Move = 1;
-		if (ev.key.code == sf::Keyboard::Right)
+		}
+		else if (ev.key.code == sf::Keyboard::Right) { 
 			if (!quit)
 				Move = 0;
-		if (ev.key.code == sf::Keyboard::R && ev.type == sf::Event::KeyReleased)
+		}
+		else if (ev.key.code == sf::Keyboard::Up && ev.type == sf::Event::KeyReleased){ 
 			if (!quit)
-				Rotate = 1;
+				CurrentBlock->Rotate(board);
+		}
+		else if (ev.key.code == sf::Keyboard::Down) {
+			if (!quit) {
+				fastfalling = 1;
+			}
+		}
+		
 	}
 }
-
+void Game::SetName(std::string n)
+{
+	name = n;
+}
 
 void Game::SwapUp(int row)
 {
@@ -89,6 +108,7 @@ void Game::CheckForLines() {
 			for (int j = 0; j < 10; j++)
 				board[i][j] = 0;
 			SwapUp(i);
+			score += 100;
 			i--;
 		}
 	}
@@ -99,6 +119,7 @@ void Game::Update()
 	if (!quit)
 	{
 		if (!CurrentBlock->IsControllable()) {
+			fastfalling = 0;
 			int type = rand() % 7;
 			CurrentBlock->SetTetrimino(board);
 			delete CurrentBlock;
@@ -119,18 +140,23 @@ void Game::Update()
 			if (CurrentBlock->Checkintersection(board))
 				quit = 1;
 		}
-		if (timer % speed == 0 && !quit) {
-			timer = 0;
-			CurrentBlock->Fall(board);         //We make the blocks fall every 30 ticks
+		if (fastfalling)
+			usingspeed = 5;
+		else {
+			usingspeed = speed -((score/1000)*0.1)*speed;
+		}
+		if (timer2 % 15 == 0) {
 			if (Move != -1) {
 				CurrentBlock->ShiftX(Move, board); Move = -1;
 			}
-			if (Rotate != -1) {
-				CurrentBlock->Rotate(board); Rotate = -1;
-			}
+		}
+		if (timer % usingspeed == 0 && !quit) {
+			timer = 0;
+			CurrentBlock->Fall(board);         //We make the blocks fall every 30 ticks
 		}
 		CheckForLines();
 		timer++;
+		timer2++;
 	}
 }
 
@@ -156,9 +182,18 @@ void Game::PrintBoard()
 		window->draw(Block);
 	}
 }
+
+void Game::PrintScore()
+{
+	scoreText.setString("score");
+	scoreNum.setString(std::to_string(score));
+	window->draw(scoreText);
+	window->draw(scoreNum);
+}
 void Game::Render()
 {
 	window->clear();
+	PrintScore();
 	PrintBoard();
 	window->display();
 }
