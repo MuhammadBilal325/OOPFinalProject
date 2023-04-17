@@ -68,20 +68,25 @@ void Game::PollEvents()
 			if (!quit)
 				Move = 1;
 		}
-		else if (ev.key.code == sf::Keyboard::Right) { 
+		else if (ev.key.code == sf::Keyboard::Right) {
 			if (!quit)
 				Move = 0;
 		}
-		else if (ev.key.code == sf::Keyboard::Up && ev.type == sf::Event::KeyReleased){ 
+		else if (ev.key.code == sf::Keyboard::Up && ev.type == sf::Event::KeyReleased) {
 			if (!quit)
 				CurrentBlock->Rotate(board);
 		}
-		else if (ev.key.code == sf::Keyboard::Down) {
+		else if (ev.key.code == sf::Keyboard::Down && ev.type == sf::Event::KeyPressed) {
 			if (!quit) {
 				fastfalling = 1;
 			}
 		}
-		
+		else if (ev.key.code == sf::Keyboard::Down && ev.type == sf::Event::KeyReleased) {
+			if (!quit) {
+				fastfalling = 0;
+			}
+		}
+
 	}
 }
 void Game::SetName(std::string n)
@@ -143,7 +148,7 @@ void Game::Update()
 		if (fastfalling)
 			usingspeed = 5;
 		else {
-			usingspeed = speed -((score/1000)*0.1)*speed;
+			usingspeed = speed - ((score / 1000) * 0.1) * speed;
 		}
 		if (timer2 % 15 == 0) {
 			if (Move != -1) {
@@ -153,17 +158,19 @@ void Game::Update()
 		if (timer % usingspeed == 0 && !quit) {
 			timer = 0;
 			CurrentBlock->Fall(board);         //We make the blocks fall every 30 ticks
+			if (!CurrentBlock->IsControllable())
+			CheckForLines();
 		}
-		CheckForLines();
+		
 		timer++;
 		timer2++;
 	}
 }
 
 void Game::Quit() {
-	Block.setSize(sf::Vector2f(500, 300));
-	Block.setFillColor(sf::Color::Red);
-	Block.setPosition(50, 200);
+	//Block.setSize(sf::Vector2f(500, 300));
+	//Block.setFillColor(sf::Color::Red);
+	//Block.setPosition(50, 200);
 }
 void Game::PrintBoard()
 {

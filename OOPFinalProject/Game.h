@@ -62,6 +62,5 @@ public:
 	void Quit();
 	void PrintBoard();
 	void PrintScore();
-	void PrintBoardcout();
 };
 

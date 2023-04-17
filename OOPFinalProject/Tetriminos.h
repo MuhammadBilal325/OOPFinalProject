@@ -8,7 +8,13 @@ protected:
 	int x, y;
 	bool controllable;
 public:
-	Tetrimino() :x(0), y(0), rotation(0), controllable(1) {}
+	Tetrimino() :x(0), y(0), rotation(0), controllable(1)
+	{
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 4; j++)
+				for (int k = 0; k < 4; k++)
+					shape[i][j][k] = 0;
+	}
 	int GetX() { return x; }
 	int GetY() { return y; }
 	bool IsControllable() { return controllable; }
@@ -30,19 +36,41 @@ public:
 		}
 	}
 	void Rotate(int board[20][10]) {
+		bool flag = 0;
+		int oldx = x;
 		rotation++;
 		rotation = rotation % 4;
 		if (Checkintersection(board) || CheckBounds(board)) {
-			rotation--;
-			rotation = rotation % 4;
+			for (; x > oldx - 4 && flag == 0; --x) {
+				if (Checkintersection(board) || CheckBounds(board));
+				else {
+					flag = 1;
+					++x;
+				}
+			}
+			if (!flag) {
+				x += 4;
+				for (; x < oldx + 4 && flag == 0; ++x) {
+					if (Checkintersection(board) || CheckBounds(board));
+					else {
+						flag = 1;
+						--x;
+					}
+				}
+			}
+			if (!flag) {
+				rotation--;
+				rotation = rotation % 4;
+			}
 		}
 	}
 	bool Checkintersection(int board[][10]) //Returns true if tetrimino is intersecting. False if not intersecting
 	{
 		for (int i = y; i < y + 4 && i < 20; i++)
 			for (int j = x; j < x + 4 && j < 10; j++)
-				if (board[i][j] != 0 && shape[rotation][i - y][j - x] != 0)
-					return true;
+				if (i < 20 || i >= 0 || j < 10 || j >= 0)
+					if (board[i][j] != 0 && shape[rotation][i - y][j - x] != 0)
+						return true;
 		return false;
 	}
 	bool CheckBounds(int board[][10])//Returns true if tetrimino is currently out of bounds
