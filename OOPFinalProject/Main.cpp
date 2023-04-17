@@ -5,7 +5,7 @@
 using namespace std;
 int main()
 {
-	srand(time(0));
+	srand(1);
 	Game game;
 	//string name;
 	//cout << "Enter Player Name: ";

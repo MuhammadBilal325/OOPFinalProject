@@ -3,280 +3,213 @@
 class Tetrimino
 {
 protected:
-	int shape[4][4][4];
-	int rotation;
+	int** shape;
+	int rows, columns;
 	int x, y;
 	bool controllable;
+	sf::Sprite Tile;
+	sf::Texture Tiletexture;
 public:
-	Tetrimino() :x(0), y(0), rotation(0), controllable(1)
-	{
-		for (int i = 0; i < 4; i++)
-			for (int j = 0; j < 4; j++)
-				for (int k = 0; k < 4; k++)
-					shape[i][j][k] = 0;
-	}
+	Tetrimino() :x(0), y(0), controllable(1), rows(0), columns(0)
+	{}
+	~Tetrimino();
 	int GetX() { return x; }
 	int GetY() { return y; }
 	bool IsControllable() { return controllable; }
-	virtual void setValues(int shape[][4][4], int rotation, int x, int y) {
-		for (int k = 0; k < 4; k++)
-			for (int i = 0; i < 4; i++)
-				for (int j = 0; j < 4; j++)
-					Tetrimino::shape[k][i][j] = shape[k][i][j];
-		Tetrimino::rotation = rotation;
-		Tetrimino::x = x;
-		Tetrimino::y = y;
-	}
-	void Fall(int board[20][10]) {
-		y++;
-		if (CheckBounds(board) || Checkintersection(board))
-		{
-			y--;
-			controllable = 0;
-		}
-	}
-	void Rotate(int board[20][10]) {
-		bool flag = 0;
-		int oldx = x;
-		rotation++;
-		rotation = rotation % 4;
-		if (Checkintersection(board) || CheckBounds(board)) {
-			for (; x > oldx - 4 && flag == 0; --x) {
-				if (Checkintersection(board) || CheckBounds(board));
-				else {
-					flag = 1;
-					++x;
-				}
-			}
-			if (!flag) {
-				x += 4;
-				for (; x < oldx + 4 && flag == 0; ++x) {
-					if (Checkintersection(board) || CheckBounds(board));
-					else {
-						flag = 1;
-						--x;
-					}
-				}
-			}
-			if (!flag) {
-				rotation--;
-				rotation = rotation % 4;
-			}
-		}
-	}
-	bool Checkintersection(int board[][10]) //Returns true if tetrimino is intersecting. False if not intersecting
-	{
-		for (int i = y; i < y + 4 && i < 20; i++)
-			for (int j = x; j < x + 4 && j < 10; j++)
-				if (i < 20 || i >= 0 || j < 10 || j >= 0)
-					if (board[i][j] != 0 && shape[rotation][i - y][j - x] != 0)
-						return true;
-		return false;
-	}
-	bool CheckBounds(int board[][10])//Returns true if tetrimino is currently out of bounds
-	{
-		for (int i = y; i < y + 4; i++)
-			for (int j = x; j < x + 4; j++)
-				if ((i >= 20 || i < 0 || j >= 10 || j < 0) && shape[rotation][i - y][j - x] != 0)
-					return true;
-		return false;
-	}
-	void MoveX(bool i)
-	{
-		if (i)
-			x--;
-		else
-			x++;
-	}
-	void ShiftX(bool i, int board[][10]) {
-		if (controllable)
-		{
-			MoveX(i);
-			if (Checkintersection(board) || CheckBounds(board))
-				MoveX(!i);
-		}
-	}
-	void SetTetrimino(int board[20][10]) {
-		for (int i = y; i < y + 4; i++)
-			for (int j = x; j < x + 4; j++) {
-				if (i < 20 && j < 10 && shape[rotation][i - y][j - x] != 0)
-					board[i][j] = shape[rotation][i - y][j - x];
-			}
-	}
-	void ResetTetrimino(int board[20][10]) {
-		for (int i = y; i < y + 4; i++)
-			for (int j = x; j < x + 4; j++) {
-				if (i < 20 && j < 10 && shape[rotation][i - y][j - x] != 0)
-					board[i][j] = 0;
-			}
-	}
+	void Fall(int **board);
+	virtual void Rotate(int **board);
+	bool Checkintersection(int **board); 
+	bool CheckBounds(int **board);
+	void MoveX(bool i);
+	void ShiftX(bool i, int **board);
+	void SetTetrimino(int **board);
+	void ResetTetrimino(int **board);
+	void DrawTetrimino(sf::RenderWindow*& window);
 };
 
 class Ishape :public Tetrimino {
+
 public:
 	Ishape() {
-		int shape[4][4][4] = { {
-			  {0,1,0,0},
-			  {0,1,0,0},
-			  {0,1,0,0},
-			  {0,1,0,0}},
-			{ {1,1,1,1},
-			  {0,0,0,0},
-			  {0,0,0,0},
-			  {0,0,0,0}  },
-			{ {0,1,0,0},
-			  {0,1,0,0},
-			  {0,1,0,0},
-			  {0,1,0,0}  },
-			{ {1,1,1,1},
-			  {0,0,0,0},
-			  {0,0,0,0},
-			  {0,0,0,0}  },
+		char tilepath[21] = "./Textures/Tile1.png";
+		tilepath[15] = 2+48;
+		if (!Tiletexture.loadFromFile(tilepath)) {
+			std::cout << "Error loading I shape tile";
+		}
+		Tile=sf::Sprite(Tiletexture);
+		x = 4;
+		y = 0;
+		rows = 4;
+		columns = 1;
+		shape = new int* [rows];
+		for (int i = 0; i < rows; i++)
+			shape[i] = new int[columns];
+		int shape2[4][1] = {
+			{1},
+			{1},
+			{1},
+			{1}
 		};
-		setValues(shape, 0, 4, 0);
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
+				shape[i][j] = shape2[i][j];
 	}
+
 };
 class Jshape :public Tetrimino {
 public:
 	Jshape() {
-		int shape[4][4][4] = { {
-			  {0,2,0,0},
-			  {0,2,0,0},
-			  {2,2,0,0},
-			  {0,0,0,0}},
-			{ {0,2,0,0},
-			  {0,2,2,2},
-			  {0,0,0,0},
-			  {0,0,0,0}  },
-			{ {0,2,2,0},
-			  {0,2,0,0},
-			  {0,2,0,0},
-			  {0,0,0,0}  },
-			{ {2,2,2,0},
-			  {0,0,2,0},
-			  {0,0,0,0},
-			  {0,0,0,0}  },
+		char tilepath[21] = "./Textures/Tile1.png";
+		tilepath[15] = 3+48;
+		if (!Tiletexture.loadFromFile(tilepath)) {
+			std::cout << "Error loading J shape tile";
+		}
+		Tile = sf::Sprite(Tiletexture);
+		x = 4;
+		y = 0;
+		rows = 3;
+		columns = 2;
+		shape = new int* [rows];
+		for (int i = 0; i < rows; i++)
+			shape[i] = new int[columns];
+		int shape2[3][2] = {
+			{0,2},
+			{0,2},
+			{2,2},
 		};
-		setValues(shape, 0, 4, 0);
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
+				shape[i][j] = shape2[i][j];
 	}
+
 };
 class Lshape :public Tetrimino {
 public:
 	Lshape() {
-		int shape[4][4][4] = { {
-			  {0,3,0,0},
-			  {0,3,0,0},
-			  {0,3,3,0},
-			  {0,0,0,0}},
-			{ {0,3,3,3},
-			  {0,3,0,0},
-			  {0,0,0,0},
-			  {0,0,0,0}  },
-			{ {3,3,0,0},
-			  {0,3,0,0},
-			  {0,3,0,0},
-			  {0,0,0,0}  },
-			{ {0,0,3,0},
-			  {3,3,3,0},
-			  {0,0,0,0},
-			  {0,0,0,0}  },
+		char tilepath[21] = "./Textures/Tile1.png";
+		tilepath[15] = 4+48;
+		if (!Tiletexture.loadFromFile(tilepath)) {
+			std::cout << "Error loading L shape tile";
+		}
+		Tile = sf::Sprite(Tiletexture);
+		x = 4;
+		y = 0;
+		rows = 3;
+		columns = 2;
+		shape = new int* [rows];
+		for (int i = 0; i < rows; i++)
+			shape[i] = new int[columns];
+		int shape2[3][2] = {
+			{3,0},
+			{3,0},
+			{3,3},
 		};
-		setValues(shape, 0, 4, 0);
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
+				shape[i][j] = shape2[i][j];
 	}
 };
 class Oshape :public Tetrimino {
 public:
 	Oshape() {
-		int shape[4][4][4] = { {
-			  {0,0,0,0},
-			  {0,4,4,0},
-			  {0,4,4,0},
-			  {0,0,0,0}},
-			{ {0,0,0,0},
-			  {0,4,4,0},
-			  {0,4,4,0},
-			  {0,0,0,0}  },
-			{ {0,0,0,0},
-			  {0,4,4,0},
-			  {0,4,4,0},
-			  {0,0,0,0}  },
-			{ {0,0,0,0},
-			  {0,4,4,0},
-			  {0,4,4,0},
-			  {0,0,0,0}  },
+		char tilepath[21] = "./Textures/Tile1.png";
+		tilepath[15] = 5+48;
+		if (!Tiletexture.loadFromFile(tilepath)) {
+			std::cout << "Error loading O shape tile";
+		}
+		Tile = sf::Sprite(Tiletexture);
+		x = 4;
+		y = 0;
+		rows = 2;
+		columns = 2;
+		shape = new int* [rows];
+		for (int i = 0; i < rows; i++)
+			shape[i] = new int[columns];
+		int shape2[2][2] = {
+			{4,4},
+			{4,4},
 		};
-		setValues(shape, 0, 4, 0);
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
+				shape[i][j] = shape2[i][j];
+	}
+
+	void Rotate(int board[20][10]) {
+
 	}
 };
 class Sshape :public Tetrimino {
 public:
 	Sshape() {
-		int shape[4][4][4] = { {
-			  {0,5,5,0},
-			  {5,5,0,0},
-			  {0,0,0,0},
-			  {0,0,0,0}},
-			{ {5,0,0,0},
-			  {5,5,0,0},
-			  {0,5,0,0},
-			  {0,0,0,0}  },
-			{ {0,0,0,0},
-			  {0,5,5,0},
-			  {5,5,0,0},
-			  {0,0,0,0}  },
-			{ {5,0,0,0},
-			  {5,5,0,0},
-			  {0,5,0,0},
-			  {0,0,0,0}  },
+		char tilepath[21] = "./Textures/Tile1.png";
+		tilepath[15] = 6+48;
+		if (!Tiletexture.loadFromFile(tilepath)) {
+			std::cout << "Error loading S shape tile";
+		}
+		Tile = sf::Sprite(Tiletexture);
+		x = 4;
+		y = 0;
+		rows = 2;
+		columns = 3;
+		shape = new int* [rows];
+		for (int i = 0; i < rows; i++)
+			shape[i] = new int[columns];
+		int shape2[2][3] = {
+			{0,5,5},
+			{5,5,0},
 		};
-		setValues(shape, 0, 4, 0);
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
+				shape[i][j] = shape2[i][j];
 	}
 };
 class Tshape :public Tetrimino {
 public:
 	Tshape() {
-		int shape[4][4][4] = { {
-			  {6,6,6,0},
-			  {0,6,0,0},
-			  {0,0,0,0},
-			  {0,0,0,0}},
-			{ {0,6,0,0},
-			  {6,6,0,0},
-			  {0,6,0,0},
-			  {0,0,0,0}  },
-			{ {0,0,0,0},
-			  {0,6,0,0},
-			  {6,6,6,0},
-			  {0,0,0,0}  },
-			{ {6,0,0,0},
-			  {6,6,0,0},
-			  {6,0,0,0},
-			  {0,0,0,0}  },
+		char tilepath[21] = "./Textures/Tile1.png";
+		tilepath[15] = 7+48;
+		if (!Tiletexture.loadFromFile(tilepath)) {
+			std::cout << "Error loading T shape tile";
+		}
+		Tile = sf::Sprite(Tiletexture);
+		x = 4;
+		y = 0;
+		rows = 2;
+		columns = 3;
+		shape = new int* [rows];
+		for (int i = 0; i < rows; i++)
+			shape[i] = new int[columns];
+		int shape2[2][3] = {
+			{6,6,6},
+			{0,6,0},
 		};
-		setValues(shape, 0, 4, 0);
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
+				shape[i][j] = shape2[i][j];
 	}
 };
 class Zshape :public Tetrimino {
 public:
 	Zshape() {
-		int shape[4][4][4] = { {
-			  {7,7,0,0},
-			  {0,7,7,0},
-			  {0,0,0,0},
-			  {0,0,0,0}},
-			{ {0,7,0,0},
-			  {7,7,0,0},
-			  {7,0,0,0},
-			  {0,0,0,0}  },
-			{ {0,0,0,0},
-			  {0,7,7,0},
-			  {0,0,7,7},
-			  {0,0,0,0}  },
-			{ {0,0,0,0},
-			  {0,0,7,0},
-			  {0,7,7,0},
-			  {0,7,0,0}  },
+		char tilepath[21] = "./Textures/Tile1.png";
+		tilepath[15] = 8+48;
+		if (!Tiletexture.loadFromFile(tilepath)) {
+			std::cout << "Error loading Z shape tile";
+		}
+		Tile = sf::Sprite(Tiletexture);
+		x = 4;
+		y = 0;
+		rows = 2;
+		columns = 3;
+		shape = new int* [rows];
+		for (int i = 0; i < rows; i++)
+			shape[i] = new int[columns];
+		int shape2[2][3] = {
+			{7,7,0},
+			{0,7,7},
 		};
-		setValues(shape, 0, 4, 0);
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
+				shape[i][j] = shape2[i][j];
 	}
 };
