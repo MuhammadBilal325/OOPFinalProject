@@ -29,6 +29,7 @@ Game::Game()
 		CreateTetrimino<Tshape>();
 	else if (type == 6)
 		CreateTetrimino<Zshape>();
+	Render();
 }
 
 Game::~Game()
@@ -112,7 +113,7 @@ void Game::Update()
 				quit = 1;
 		}
 		if (fastfalling)
-			usingspeed = 5;
+			usingspeed = 3;
 		else
 			usingspeed = speed - ((score / 1000) * 0.1) * speed;
 		if (timer2 % 10 == 0)
@@ -148,6 +149,7 @@ void Game::Render()
 	window->clear();
 	PrintScore();
 	well.PrintBoard(window);
+	if(!quit)
 	CurrentBlock->DrawTetrimino(window);
 	if (quit) {
 		Quit();

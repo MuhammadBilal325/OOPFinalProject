@@ -14,7 +14,7 @@ Tetrimino::~Tetrimino() {
 	delete[]shape;
 }
 
-void Tetrimino::Fall(int **board)
+void Tetrimino::Fall(int** board)
 {
 	y++;
 	if (CheckBounds(board) || Checkintersection(board))
@@ -45,45 +45,39 @@ void Tetrimino::Rotate(int** board)
 		}
 	int** temp = shape;
 	shape = newarr;
-	int tempx = x;
-	bool flag = 0, flag2 = 0;
+	int oldx = x;
 	int pokingout = 0;
-	if (Checkintersection(board) || CheckBounds(board)) {
-		for (; x > tempx - 4 && !flag && !flag2; --x) {
-			if (Checkintersection(board))
-				flag2 = 1;
-			if (CheckBounds(board) && !flag2);
-			else {
-				flag = 1;
-				++x;
-			}
-		}
-		if (!flag && !flag2) {
-			x += 4;
-			for (; x < tempx + 4 && !flag && !flag2; ++x) {
-				if (Checkintersection(board))
-					flag2 = 1;
-				if (CheckBounds(board) && !flag2);
-				else {
-					flag = 1;
-					--x;
-				}
-			}
-		}
-		if (!flag)
+	bool intersect = 0;
+	if (Checkintersection(board)||CheckBounds(board)) {
+		for (int j = x; j < x + columns; j++)
 		{
-			for (int i = 0; i < rows; i++)
-				delete[]shape[i];
-			delete[]shape;
+				if ((board[y][j] != 0 && intersect == 0)||j>=10)
+					intersect = 1;
+				if (intersect)
+					pokingout++;
+		}
+		x -= pokingout;
+		if (Checkintersection(board)) {
+			//Undo move
 			shape = temp;
-			x = tempx;
+			swap(rows, columns);
+			for (int i = 0; i < columns; i++)
+				delete[]newarr[i];
+			delete[]newarr;
+		}
+		else {
+			for (int i = 0; i < columns; i++)
+				delete[]temp[i];
+			delete[]temp;
 		}
 	}
-	else {
+	else {//Keep move
 		for (int i = 0; i < columns; i++)
 			delete[]temp[i];
 		delete[]temp;
 	}
+
+
 }
 //Returns true if tetrimino is intersecting. False if not intersecting
 bool Tetrimino::Checkintersection(int** board)
@@ -141,13 +135,13 @@ void Tetrimino::ResetTetrimino(int** board)
 		}
 }
 
-void Tetrimino::DrawTetrimino(sf::RenderWindow*&window) {
-	for(int i=y;i<y+rows;i++)
+void Tetrimino::DrawTetrimino(sf::RenderWindow*& window) {
+	for (int i = y; i < y + rows; i++)
 		for (int j = x; j < x + columns; j++)
 		{
-			if (shape[i-y][j-x]!=0) {
-			Tile.setPosition(((36 * (j + 1)) - 16), ((36 * (i + 1)) - 16));
-			window->draw(Tile);
+			if (shape[i - y][j - x] != 0) {
+				Tile.setPosition(((36 * (j + 1)) - 16), ((36 * (i + 1)) - 16));
+				window->draw(Tile);
 			}
 		}
 }
