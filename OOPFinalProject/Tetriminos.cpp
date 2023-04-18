@@ -13,23 +13,49 @@ Tetrimino::~Tetrimino() {
 		delete[]shape[i];
 	delete[]shape;
 }
-
+/*
+* We make the block fall by one y, if its intesecting with anything we undo the fall
+* and make it uncontrollable so it gets destroyed next time the update loop runs.
+* If it doesnt intersect then we put it down another time and check again to see if it intersects
+* If it does we make it uncontrollable
+* 
+* The logic is simple, 
+* 1. Block falls
+* 2. if block intersects block goes back up
+* 3. if block does not intersect block takes new position
+* 4. We check if block can go any further in its current position
+* 5. If block can no longer go down anymore we make it uncontrollable
+* 
+* By checking with another incrementation on the y axis we allow the block to become uncontrollable
+* on the exact frame it sits on top of another block instead of the user having to wait for it to fall again
+* before getting another block
+*/
 void Tetrimino::Fall(int** board)
 {
 	y++;
-	if (CheckBounds(board) || Checkintersection(board))
+	if (Checkintersection(board) || CheckBounds(board))
 	{
 		y--;
 		controllable = 0;
 	}
+	else {
+		y++;
+		if (Checkintersection(board)|| CheckBounds(board)) {
+			controllable = 0;
+		}
+		y--;
+	}
 }
+/*
+This function takes the board of 20x10 cells as an input and rotates the tetrimino accordingly. The tetrimino is rotated using a general formula for most tetrominos but a customized one for I shape and O shape
+First we take a new array and in that array we store a transpose of the current array
+Then we reverse every row of the new transposed array, this completes the first part of the rotation
+In the second part, we check if rotating the piece put it out of bounds.
+If it did, we check if its "poking" into another piece or out of the bounds.
+We count the amount of blocks it is poking out by and then move it that amount on the x axis
+in order to "kick" it back into the box.
 
-//This function takes the board of 20x10 cells as an input and rotates the tetrimino accordingly. The tetrimino is rotated using a general formula for most tetrominos but a customized one for I shape and O shape
-//First we take a new array and in that array we store a transpose of the current array
-// Then we reverse every row of the new transposed array, this completes the first part of the rotation
-// In the second part, we check if rotating the piece put it out of bounds.
-// If it did, the tetrimino is shifted "columns" amount of blocks to the right and with every shift we check if its in a valid spot,
-// Similarly, the tetrimino is shifted "columns" amount of blocks to the left and we check for the spots validity.
+*/
 void Tetrimino::Rotate(int** board)
 {
 	swap(rows, columns);
@@ -48,24 +74,25 @@ void Tetrimino::Rotate(int** board)
 	int oldx = x;
 	int pokingout = 0;
 	bool intersect = 0;
-	if (Checkintersection(board)||CheckBounds(board)) {
+	if (Checkintersection(board) || CheckBounds(board)) {
 		for (int j = x; j < x + columns; j++)
 		{
-				if ((board[y][j] != 0 && intersect == 0)||j>=10)
-					intersect = 1;
-				if (intersect)
-					pokingout++;
+			if ((board[y][j] != 0 && intersect == 0) || j >= 10)
+				intersect = 1;
+			if (intersect)
+				pokingout++;
 		}
 		x -= pokingout;
-		if (Checkintersection(board)) {
+		if (Checkintersection(board) || CheckBounds(board)) {
 			//Undo move
+			x += pokingout;
 			shape = temp;
 			swap(rows, columns);
 			for (int i = 0; i < columns; i++)
 				delete[]newarr[i];
 			delete[]newarr;
 		}
-		else {
+		else {//Keep move
 			for (int i = 0; i < columns; i++)
 				delete[]temp[i];
 			delete[]temp;

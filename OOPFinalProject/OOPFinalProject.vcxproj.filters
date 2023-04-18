@@ -27,6 +27,9 @@
     <ClCompile Include="Well.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="MenuGUI.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -35,5 +38,13 @@
     <ClInclude Include="Tetriminos.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MenuGUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Highscores.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

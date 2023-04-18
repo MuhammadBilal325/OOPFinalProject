@@ -44,7 +44,7 @@ void Well::PrintBoard(sf::RenderWindow*& window)
 	window->draw(Tiles[0]);
 }
 
-void Well::CheckForLines(int& score)
+void Well::CheckForLines(int& score,int&totalscore)
 {
 	bool continuos = 1;
 	for (int i = 0; i < 20; i++)
@@ -59,6 +59,7 @@ void Well::CheckForLines(int& score)
 				board[i][j] = 0;
 			SwapUp(i);
 			score += 100;
+			totalscore += 100;
 			i--;
 		}
 	}

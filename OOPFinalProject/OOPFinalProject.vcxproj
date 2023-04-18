@@ -135,12 +135,17 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MenuGUI.cpp" />
     <ClCompile Include="Tetriminos.cpp" />
     <ClCompile Include="Well.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="MenuGUI.h" />
     <ClInclude Include="Tetriminos.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Highscores.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
