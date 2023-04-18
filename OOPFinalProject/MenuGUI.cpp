@@ -33,6 +33,16 @@ MenuGUI::MenuGUI() {
 	NameText.setPosition(390, 200);
 	NameText.setCharacterSize(23);
 
+	Highscore.setFont(font);
+	Highscore.setPosition(400, 380);
+	Highscore.setCharacterSize(21);
+
+	HighscoreBlock.setSize(sf::Vector2f(200, 400));
+	HighscoreBlock.setPosition(390, 370);
+	HighscoreBlock.setFillColor(sf::Color(0, 0, 0, 255));
+	HighscoreBlock.setOutlineColor(sf::Color::White);
+	HighscoreBlock.setOutlineThickness(5);
+
 	ScoreBlock.setSize(sf::Vector2f(200, 110));
 	ScoreBlock.setPosition(390, 235);
 	ScoreBlock.setFillColor(sf::Color(0, 0, 0, 255));
@@ -55,9 +65,7 @@ MenuGUI::MenuGUI() {
 	EnternameDisclaimer[3].setString("To confirm");
 	//Initializes tetromino and player menu for gui
 	Tetromino.setFont(font);
-	Player.setFont(font);
-	Player.setPosition(390, 380);
-	Player.setCharacterSize(23);
+	
 	for (int i = 425, k = 0; k < 5; i += 70, k++) {
 		Playernames[k].setFont(font);
 		Playernames[k].setPosition(400, i);
@@ -75,14 +83,15 @@ void MenuGUI::PrintName(sf::RenderWindow*& window) {
 		window->draw(EnternameDisclaimer[i]);
 }
 void MenuGUI::PrintPlayers(sf::RenderWindow*& window,std::string*highscorenames,int*highscoreint) {
-	Player.setString("High Scores");
+	window->draw(HighscoreBlock);
+	Highscore.setString("High Scores");
 	for (int i = 0; i < 5; i++) {
 		Playernames[i].setString(highscorenames[i]);
 		Playernumbers[i].setString(intTostring(highscoreint[i]));
 		window->draw(Playernames[i]);
 		window->draw(Playernumbers[i]);
 	}
-	window->draw(Player);
+	window->draw(Highscore);
 }
 void MenuGUI::PrintLevel(sf::RenderWindow*& window, int&totalscore) {
 	window->draw(levelText);

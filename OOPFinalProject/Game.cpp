@@ -88,6 +88,8 @@ void Game::PollEvents()
 	{
 		if (ev.type == sf::Event::Closed)
 			window->close();
+		if (ev.key.code == sf::Keyboard::Escape)
+			window->close();
 		if (isnameentered) {
 			if (ev.key.code == sf::Keyboard::Left && ev.type == sf::Event::KeyReleased) {
 				if (!quit)

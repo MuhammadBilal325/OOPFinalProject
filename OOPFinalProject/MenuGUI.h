@@ -4,12 +4,12 @@
 class MenuGUI {
 	friend class Game;
 private:
-	sf::RectangleShape Block, ScoreBlock, PlayerBlock;
+	sf::RectangleShape Block, ScoreBlock, PlayerBlock,HighscoreBlock;
 	sf::RectangleShape NameBlock;
 	sf::Text EnternameDisclaimer[4];
 	sf::Font font;
 	sf::Text scoreText, levelText,levelNum, scoreNum, Tetromino;
-	sf::Text Player, Playernames[5], Playernumbers[5];
+	sf::Text Highscore, Playernames[5], Playernumbers[5];
 	sf::Text NameText;
 
 public:
