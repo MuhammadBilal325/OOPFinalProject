@@ -65,7 +65,7 @@ MenuGUI::MenuGUI() {
 	EnternameDisclaimer[3].setString("To confirm");
 	//Initializes tetromino and player menu for gui
 	Tetromino.setFont(font);
-	
+
 	for (int i = 425, k = 0; k < 5; i += 70, k++) {
 		Playernames[k].setFont(font);
 		Playernames[k].setPosition(400, i);
@@ -77,28 +77,38 @@ MenuGUI::MenuGUI() {
 		Playernumbers[k].setCharacterSize(0);
 	}
 }
+void MenuGUI::initializePlayerGUI(int*highscoreint) {
+	for (int i = 0; i < 5; i++) {
+		if (highscoreint[i] != 0) {
+		Playernames[i].setCharacterSize(20);
+		Playernumbers[i].setCharacterSize(18);
+		}
+	}
+}
 void MenuGUI::PrintName(sf::RenderWindow*& window) {
 	window->draw(NameBlock);
 	for (int i = 0; i < 4; i++)
 		window->draw(EnternameDisclaimer[i]);
 }
-void MenuGUI::PrintPlayers(sf::RenderWindow*& window,std::string*highscorenames,int*highscoreint) {
+void MenuGUI::PrintPlayers(sf::RenderWindow*& window, std::string* highscorenames, int* highscoreint) {
 	window->draw(HighscoreBlock);
 	Highscore.setString("High Scores");
 	for (int i = 0; i < 5; i++) {
+		if (highscoreint[i] != 0) {
 		Playernames[i].setString(highscorenames[i]);
 		Playernumbers[i].setString(intTostring(highscoreint[i]));
 		window->draw(Playernames[i]);
 		window->draw(Playernumbers[i]);
+		}
 	}
 	window->draw(Highscore);
 }
-void MenuGUI::PrintLevel(sf::RenderWindow*& window, int&totalscore) {
+void MenuGUI::PrintLevel(sf::RenderWindow*& window, int& totalscore) {
 	window->draw(levelText);
 	levelNum.setString(intTostring((totalscore / 1000) + 1));
 	window->draw(levelNum);
 }
-void MenuGUI::PrintScore(sf::RenderWindow*& window,int&totalscore) {
+void MenuGUI::PrintScore(sf::RenderWindow*& window, int& totalscore) {
 	window->draw(NameText);
 	//Print large block
 	window->draw(ScoreBlock);

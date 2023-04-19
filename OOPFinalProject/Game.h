@@ -21,7 +21,7 @@ public:
 	Well();
 	~Well();
 	int** GetBoard() { return board; }
-	void CheckForLines(int& score,int&totalscore);
+	void CheckForLines(int& score, int& totalscore);
 	void SwapUp(int row);
 	void PrintBoard(sf::RenderWindow*& window);
 
@@ -31,23 +31,26 @@ class Game
 {
 private:
 	//Variables
-	
+
 	sf::RenderWindow* window;
 	sf::VideoMode videoMode;
 	sf::Event ev;
+	sf::Clock fallingclock, movementclock;
+	sf::Time fallingtime, movementtime;
 	MenuGUI menu;
 	std::string highscorenames[5];
-	int highscoressize,highscoreint[5];
+	int highscoressize, highscoreint[5];
 	std::string name;
 	int namesize;
 	Well well;
-	bool quit ,fastfalling,isnameentered;
-	int timer ,timer2, Move , speed ,usingspeed,score,totalscore;
+	bool quit, fastfalling, isnameentered, scoresfinalized;
+	int  Move, speed, fallinginterval, score, totalscore;
+
 	Tetrimino* CurrentBlock;
 public:
 	//Constructors and Destructors
 	Game();
-    ~Game();
+	~Game();
 	//Initializor
 	void InitializeHighscores();
 	//Getter Setter

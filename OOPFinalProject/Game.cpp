@@ -1,8 +1,17 @@
 #include"Game.h"
 #include<math.h>
 
-
-
+int getStringLength(std::string s) {
+	int i = 0;
+	for (; s[i] != '\0'; i++);
+	return i;
+}
+void ReplaceStringchar(std::string& s, char c, char r) {
+	int size = getStringLength(s);
+	for (int i = 0; i < size; i++)
+		if (s[i] == c)
+			s[i] = r;
+}
 void Game::InitializeHighscores()
 {
 	name = "Jerry";
@@ -11,27 +20,37 @@ void Game::InitializeHighscores()
 	std::ifstream fin;
 	fin.open("Highscores.txt");
 	int x = 0;
-	while (x<5 && fin >>highscorenames[x]>>highscoreint[x]) {
+	while (x<5 && fin >> highscorenames[x] >> highscoreint[x]) {
 		x++;
+	}
+	if (x < 5)
+		for (int i = x; i < 5; i++) {
+			highscorenames[i] = "";
+			highscoreint[x] = 0;
+		}
+
+	for (int i = 0; i < 5; i++) {
+		ReplaceStringchar(highscorenames[i], '-', ' ');
 	}
 	highscoressize = x;
 	fin.close();
+
 }
 
 Game::Game()
 {
+
 	InitializeHighscores();
 	quit = 0;
 	fastfalling = 0;
 	isnameentered = 0;
-	timer = 0;
-	timer2 = 0;
 	Move = -1;
 	speed = 60;
-	usingspeed = 60;
+	fallinginterval = 60;
 	score = 0;
 	totalscore = 0;
 	namesize = 1;
+	scoresfinalized = 0;
 	name = "";
 	videoMode.height = 800;
 	videoMode.width = 600;
@@ -55,11 +74,9 @@ Game::Game()
 	name = "";
 	//Intializes Name Spot
 	menu.NameText.setString(name);
-	for (int i = 0; i < highscoressize; i++) {
-
-		menu.Playernames[i].setCharacterSize(20);
-		menu.Playernumbers[i].setCharacterSize(18);
-	}
+	menu.initializePlayerGUI(highscoreint);
+	fallingtime = fallingclock.getElapsedTime();
+	movementtime = movementclock.getElapsedTime();
 	Render();
 }
 
@@ -118,15 +135,14 @@ void Game::PollEvents()
 				totalscore += 1000;
 			}
 		}
-		else if (ev.type == sf::Event::TextEntered && ev.text.unicode<127 && ev.text.unicode > 31) {
-				std::cout << ev.text.unicode;
+		else if (ev.type == sf::Event::TextEntered && ev.text.unicode < 127 && ev.text.unicode > 31) {
+			if (getStringLength(name) < 9) {
 				name += ev.text.unicode;;
 				menu.NameText.setString(name);
+			}
 		}
-		else if (ev.key.code==sf::Keyboard::Backspace) {
-			namesize = 0;
-			for (int i = 0; name[i] != '\0'; i++)
-				++namesize;
+		else if (ev.key.code == sf::Keyboard::Backspace) {
+			namesize = getStringLength(name);
 			if (namesize > 0) {
 				char* newarr = new char[namesize];
 				for (int i = 0; i < namesize; i++)
@@ -149,6 +165,8 @@ void Game::PollEvents()
 void Game::Update()
 {
 	PollEvents();  //Get user input
+	fallingtime = fallingclock.getElapsedTime();
+	movementtime = movementclock.getElapsedTime();
 	if (!quit && isnameentered)
 	{
 		if (!CurrentBlock->IsControllable()) {
@@ -174,21 +192,20 @@ void Game::Update()
 				quit = 1;
 		}
 		if (fastfalling)
-			usingspeed = 3;
+			fallinginterval = 3;
 		else
-			usingspeed = speed - ((score / 1000) * 0.1) * speed;
-		if (timer2 % 10 == 0)
+			fallinginterval = speed - ((score / 1000) * 0.1) * speed;
+		if (movementtime.asSeconds() >= 0.1)
 			if (Move != -1) {
+				movementclock.restart();
 				CurrentBlock->ShiftX(Move, well.GetBoard());
 				Move = -1;
 			}
-		if (timer % usingspeed == 0 && !quit) {
-			timer = 0;
-			CurrentBlock->Fall(well.GetBoard());         
+		if (fallingtime.asSeconds() * 60 >= fallinginterval && !quit) {
+			fallingclock.restart();
+			CurrentBlock->Fall(well.GetBoard());
 		}
-		well.CheckForLines(score,totalscore);
-		timer++;
-		timer2++;
+		well.CheckForLines(score, totalscore);
 	}
 	score %= 8000;
 }
@@ -199,40 +216,64 @@ void Game::Quit() {
 
 void Game::FinalizeScores()
 {
-	for (int i = 0; i < highscoressize; i++) {
-		for (int j = i; j < highscoressize; j++) {
+	//If scores have already been written we just return
+	if (scoresfinalized)
+		return;
+	scoresfinalized = 1;
+	//If highscores are less than 5 then we write ours at the end
+	if (highscoressize < 5) {
+		highscoreint[highscoressize] = totalscore;
+		highscorenames[highscoressize] = name;
+		menu.initializePlayerGUI(highscoreint);
+	}
+	//Rearrange the scores
+	for (int i = 0; i < 5; i++) {
+		for (int j = i; j < 5; j++) {
 			if (highscoreint[i] < highscoreint[j]) {
 				swap(highscoreint[i], highscoreint[j]);
 				swap(highscorenames[i], highscorenames[j]);
 			}
 		}
 	}
-	int largest = highscoressize - 1;
-	for (int i = 0; i < highscoressize; i++) {
-		if (highscoreint[i] > highscoreint[largest] && highscoreint[i] < totalscore)
-			largest = i;
-	}
-	if (totalscore > highscoreint[largest]) {
-		highscoreint[largest] = totalscore;
-		highscorenames[largest] = name;
-	}
-	std::ofstream fout;
+	//If there are 5 highscores already we replace the appropiate one with ours
+	if (highscoressize == 5) {
 
+		int largest = 4;
+		for (int i = 0; i < 5; i++) {
+			if (highscoreint[i] > highscoreint[largest] && highscoreint[i] < totalscore)
+				largest = i;
+		}
+		if (totalscore > highscoreint[largest]) {
+			highscoreint[largest] = totalscore;
+			highscorenames[largest] = name;
+		}
+	}
+	//Write the highscores back to the text file
+	std::ofstream fout;
+	//We replace all spaces with hyphens before writing
+	for (int i = 0; i < 5; i++) {
+		ReplaceStringchar(highscorenames[i], ' ', '-');
+	}
 	fout.open("Highscores.txt");
-	for (int i = 0; i < highscoressize; i++) {
-		fout << highscorenames[i] << " " << highscoreint[i] << std::endl;
+	for (int i = 0; i < 5; i++) {
+		if (highscoreint[i] != 0)
+			fout << highscorenames[i] << " " << highscoreint[i] << std::endl;
 	}
 	fout.close();
+	//Replace all hyphens with spaces after writing
+	for (int i = 0; i < 5; i++) {
+		ReplaceStringchar(highscorenames[i], '-', ' ');
+	}
 }
 void Game::Render()
 {
 	window->clear();
 	menu.PrintLevel(window, totalscore);
-    menu.PrintScore(window,totalscore);
-	menu.PrintPlayers(window,highscorenames,highscoreint);
+	menu.PrintScore(window, totalscore);
+	menu.PrintPlayers(window, highscorenames, highscoreint);
 	well.PrintBoard(window);
-	if(!quit && isnameentered)
-	CurrentBlock->DrawTetrimino(window);
+	if (!quit && isnameentered)
+		CurrentBlock->DrawTetrimino(window);
 	if (!isnameentered)
 		menu.PrintName(window);
 	if (quit) {
