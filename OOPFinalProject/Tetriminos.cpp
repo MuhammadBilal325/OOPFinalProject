@@ -18,14 +18,14 @@ Tetrimino::~Tetrimino() {
 * and make it uncontrollable so it gets destroyed next time the update loop runs.
 * If it doesnt intersect then we put it down another time and check again to see if it intersects
 * If it does we make it uncontrollable
-* 
-* The logic is simple, 
+*
+* The logic is simple,
 * 1. Block falls
 * 2. if block intersects block goes back up
 * 3. if block does not intersect block takes new position
 * 4. We check if block can go any further in its current position
 * 5. If block can no longer go down anymore we make it uncontrollable
-* 
+*
 * By checking with another incrementation on the y axis we allow the block to become uncontrollable
 * on the exact frame it sits on top of another block instead of the user having to wait for it to fall again
 * before getting another block
@@ -40,7 +40,7 @@ void Tetrimino::Fall(int** board)
 	}
 	else {
 		y++;
-		if (Checkintersection(board)|| CheckBounds(board)) {
+		if (Checkintersection(board) || CheckBounds(board)) {
 			controllable = 0;
 		}
 		y--;
@@ -167,6 +167,18 @@ void Tetrimino::DrawTetrimino(sf::RenderWindow*& window) {
 		for (int j = x; j < x + columns; j++)
 		{
 			if (shape[i - y][j - x] != 0) {
+				Tile.setPosition(((36 * (j + 1)) - 16), ((36 * (i + 1)) - 16));
+				window->draw(Tile);
+			}
+		}
+}
+
+void Tetrimino::DrawTetriminoatCoordinates(sf::RenderWindow*& window, int xcoord, int ycoord)
+{
+	for (int i = ycoord; i < ycoord + rows; i++)
+		for (int j = xcoord; j < xcoord + columns; j++)
+		{
+			if (shape[i - ycoord][j - xcoord] != 0) {
 				Tile.setPosition(((36 * (j + 1)) - 16), ((36 * (i + 1)) - 16));
 				window->draw(Tile);
 			}

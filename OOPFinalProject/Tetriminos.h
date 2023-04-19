@@ -12,10 +12,11 @@ protected:
 	sf::Texture Tiletexture;
 public:
 	Tetrimino() :x(0), y(0), controllable(1), rows(0), columns(0)
-	{}
+	{};
 	~Tetrimino();
 	int GetX() { return x; }
 	int GetY() { return y; }
+	void SetControllable(bool i) { controllable = i; }
 	bool IsControllable() { return controllable; }
 	void Fall(int **board);
 	virtual void Rotate(int **board);
@@ -26,6 +27,7 @@ public:
 	void SetTetrimino(int **board);
 	void ResetTetrimino(int **board);
 	void DrawTetrimino(sf::RenderWindow*& window);
+	void DrawTetriminoatCoordinates(sf::RenderWindow*& window, int xcoord, int ycoord);
 };
 
 class Ishape :public Tetrimino {

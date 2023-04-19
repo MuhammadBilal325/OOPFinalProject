@@ -57,6 +57,7 @@ Game::Game()
 	window = new sf::RenderWindow(videoMode, "Tetris", sf::Style::Default);
 	window->setFramerateLimit(60);
 	int type = rand() % 7;
+	nexttype = rand() % 7;
 	if (type == 0)
 		CreateTetrimino<Ishape>();
 	else if (type == 1)
@@ -71,6 +72,23 @@ Game::Game()
 		CreateTetrimino<Tshape>();
 	else if (type == 6)
 		CreateTetrimino<Zshape>();
+
+	if (nexttype == 0)
+		CreateNextTetrimino<Ishape>();
+	else if (nexttype == 1)
+		CreateNextTetrimino<Jshape>();
+	else if (nexttype == 2)
+		CreateNextTetrimino<Lshape>();
+	else if (nexttype == 3)
+		CreateNextTetrimino<Oshape>();
+	else if (nexttype == 4)
+		CreateNextTetrimino<Sshape>();
+	else if (nexttype == 5)
+		CreateNextTetrimino<Tshape>();
+	else if (nexttype == 6)
+		CreateNextTetrimino<Zshape>();
+
+
 	name = "";
 	//Intializes Name Spot
 	menu.NameText.setString(name);
@@ -84,6 +102,7 @@ Game::~Game()
 {
 	delete window;
 	delete CurrentBlock;
+	delete NextBlock;
 }
 
 
@@ -97,6 +116,11 @@ void Game::CreateTetrimino() {
 	CurrentBlock = new T;
 	if (CurrentBlock->Checkintersection(well.GetBoard()))
 		quit = true;
+}
+template<typename T>
+void Game::CreateNextTetrimino() {
+	NextBlock = new T;
+	NextBlock->SetControllable(0);
 }
 
 void Game::PollEvents()
@@ -171,9 +195,11 @@ void Game::Update()
 	{
 		if (!CurrentBlock->IsControllable()) {
 			fastfalling = 0;
-			int type = rand() % 7;
+			int type = nexttype;
+			nexttype = rand() % 7;
 			CurrentBlock->SetTetrimino(well.GetBoard());
 			delete CurrentBlock;
+			delete NextBlock;
 			if (type == 0)
 				CreateTetrimino<Ishape>();
 			else if (type == 1)
@@ -188,8 +214,20 @@ void Game::Update()
 				CreateTetrimino<Tshape>();
 			else if (type == 6)
 				CreateTetrimino<Zshape>();
-			if (CurrentBlock->Checkintersection(well.GetBoard()))
-				quit = 1;
+			if (nexttype == 0)
+				CreateNextTetrimino<Ishape>();
+			else if (nexttype == 1)
+				CreateNextTetrimino<Jshape>();
+			else if (nexttype == 2)
+				CreateNextTetrimino<Lshape>();
+			else if (nexttype == 3)
+				CreateNextTetrimino<Oshape>();
+			else if (nexttype == 4)
+				CreateNextTetrimino<Sshape>();
+			else if (nexttype == 5)
+				CreateNextTetrimino<Tshape>();
+			else if (nexttype == 6)
+				CreateNextTetrimino<Zshape>();
 		}
 		if (fastfalling)
 			fallinginterval = 3;
@@ -268,12 +306,15 @@ void Game::FinalizeScores()
 void Game::Render()
 {
 	window->clear();
+	menu.PrintTetriminoBlock(window);
 	menu.PrintLevel(window, totalscore);
 	menu.PrintScore(window, totalscore);
 	menu.PrintPlayers(window, highscorenames, highscoreint);
 	well.PrintBoard(window);
-	if (!quit && isnameentered)
+	if (!quit && isnameentered) {
+		NextBlock->DrawTetriminoatCoordinates(window, 11, 0);
 		CurrentBlock->DrawTetrimino(window);
+	}
 	if (!isnameentered)
 		menu.PrintName(window);
 	if (quit) {

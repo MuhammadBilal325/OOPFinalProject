@@ -18,11 +18,17 @@ MenuGUI::MenuGUI() {
 	scoreText.setFont(font);
 	scoreNum.setFont(font);
 
-	levelText.setPosition(400, 150);
-	levelNum.setPosition(520, 150);
+	levelText.setPosition(400, 170);
+	levelNum.setPosition(520, 170);
 	levelText.setCharacterSize(25);
 	levelNum.setCharacterSize(25);
 	levelText.setString("Level");
+
+	TetriminoBlock.setPosition(400, 20);
+	TetriminoBlock.setSize(sf::Vector2f(170,130));
+	TetriminoBlock.setFillColor(sf::Color::Black);
+	TetriminoBlock.setOutlineColor(sf::Color::White);
+	TetriminoBlock.setOutlineThickness(5);
 
 	scoreText.setPosition(400, 250);
 	scoreText.setString("Score");
@@ -63,6 +69,7 @@ MenuGUI::MenuGUI() {
 	EnternameDisclaimer[1].setString("To Proceed:");
 	EnternameDisclaimer[2].setString("Press Enter");
 	EnternameDisclaimer[3].setString("To confirm");
+	Blinkingtimer = 0.5;
 	//Initializes tetromino and player menu for gui
 	Tetromino.setFont(font);
 
@@ -76,6 +83,8 @@ MenuGUI::MenuGUI() {
 		Playernumbers[k].setPosition(430, i);
 		Playernumbers[k].setCharacterSize(0);
 	}
+	menuBlinking = MenuBlinkClock.getElapsedTime();
+
 }
 void MenuGUI::initializePlayerGUI(int*highscoreint) {
 	for (int i = 0; i < 5; i++) {
@@ -85,10 +94,15 @@ void MenuGUI::initializePlayerGUI(int*highscoreint) {
 		}
 	}
 }
+//Prints the menu for entering name
 void MenuGUI::PrintName(sf::RenderWindow*& window) {
+	menuBlinking = MenuBlinkClock.getElapsedTime();
 	window->draw(NameBlock);
+	if(menuBlinking.asSeconds()>Blinkingtimer)
 	for (int i = 0; i < 4; i++)
 		window->draw(EnternameDisclaimer[i]);
+	if (menuBlinking.asSeconds() > Blinkingtimer*2)
+		MenuBlinkClock.restart();
 }
 void MenuGUI::PrintPlayers(sf::RenderWindow*& window, std::string* highscorenames, int* highscoreint) {
 	window->draw(HighscoreBlock);
@@ -117,6 +131,9 @@ void MenuGUI::PrintScore(sf::RenderWindow*& window, int& totalscore) {
 	scoreNum.setString(intTostring(totalscore));
 	window->draw(scoreText);
 	window->draw(scoreNum);
+}
+void  MenuGUI::PrintTetriminoBlock(sf::RenderWindow*&window) {
+	window->draw(TetriminoBlock);
 }
 MenuGUI::~MenuGUI() {
 

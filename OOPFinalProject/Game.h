@@ -47,6 +47,8 @@ private:
 	int  Move, speed, fallinginterval, score, totalscore;
 
 	Tetrimino* CurrentBlock;
+	Tetrimino* NextBlock;
+	int nexttype;
 public:
 	//Constructors and Destructors
 	Game();
@@ -58,6 +60,7 @@ public:
 	//Functions
 	void PollEvents();
 	template<typename T>void CreateTetrimino();
+	template<typename T>void CreateNextTetrimino();
 	void Update();
 	void Render();
 	void Quit();
