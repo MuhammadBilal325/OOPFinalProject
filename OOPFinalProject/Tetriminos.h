@@ -4,9 +4,10 @@
 class Tetrimino
 {
 protected:
-	int** shape;
-	int rows, columns;
-	int x, y;
+	int** shape; //Dynamic 2d Array used to store the actual shape of the tetromino
+	int rows, columns; //integers used to store the rows and columns of the dynamic array
+	int x, y; //The actual positions of the tetromino relative to the board, 0,0 at top left.
+	int index;//The value of the blocks of the tetromino, 1 for the first, 3 for the second etc. Used to check for the pivot block
 	bool controllable;
 	sf::Sprite Tile;
 	sf::Texture Tiletexture;
@@ -45,11 +46,12 @@ public:
 		rows = 4;
 		columns = 1;
 		shape = new int* [rows];
+		index = 1;
 		for (int i = 0; i < rows; i++)
 			shape[i] = new int[columns];
 		int shape2[4][1] = {
 			{1},
-			{1},
+			{2},
 			{1},
 			{1}
 		};
@@ -72,13 +74,14 @@ public:
 		y = 0;
 		rows = 3;
 		columns = 2;
+		index = 3;
 		shape = new int* [rows];
 		for (int i = 0; i < rows; i++)
 			shape[i] = new int[columns];
 		int shape2[3][2] = {
-			{0,2},
-			{0,2},
-			{2,2},
+			{0,3},
+			{0,4},
+			{3,3},
 		};
 		for (int i = 0; i < rows; i++)
 			for (int j = 0; j < columns; j++)
@@ -99,13 +102,14 @@ public:
 		y = 0;
 		rows = 3;
 		columns = 2;
+		index = 5;
 		shape = new int* [rows];
 		for (int i = 0; i < rows; i++)
 			shape[i] = new int[columns];
 		int shape2[3][2] = {
-			{3,0},
-			{3,0},
-			{3,3},
+			{5,0},
+			{6,0},
+			{5,5},
 		};
 		for (int i = 0; i < rows; i++)
 			for (int j = 0; j < columns; j++)
@@ -125,12 +129,13 @@ public:
 		y = 0;
 		rows = 2;
 		columns = 2;
+		index = 7;
 		shape = new int* [rows];
 		for (int i = 0; i < rows; i++)
 			shape[i] = new int[columns];
 		int shape2[2][2] = {
-			{4,4},
-			{4,4},
+			{7,7},
+			{7,7},
 		};
 		for (int i = 0; i < rows; i++)
 			for (int j = 0; j < columns; j++)
@@ -154,12 +159,13 @@ public:
 		y = 0;
 		rows = 2;
 		columns = 3;
+		index = 9;
 		shape = new int* [rows];
 		for (int i = 0; i < rows; i++)
 			shape[i] = new int[columns];
 		int shape2[2][3] = {
-			{0,5,5},
-			{5,5,0},
+			{0,9 ,9},
+			{9,10,0},
 		};
 		for (int i = 0; i < rows; i++)
 			for (int j = 0; j < columns; j++)
@@ -179,12 +185,13 @@ public:
 		y = 0;
 		rows = 2;
 		columns = 3;
+		index = 11;
 		shape = new int* [rows];
 		for (int i = 0; i < rows; i++)
 			shape[i] = new int[columns];
 		int shape2[2][3] = {
-			{6,6,6},
-			{0,6,0},
+			{0,11,0},
+			{11,12,11},
 		};
 		for (int i = 0; i < rows; i++)
 			for (int j = 0; j < columns; j++)
@@ -204,12 +211,13 @@ public:
 		y = 0;
 		rows = 2;
 		columns = 3;
+		index = 13;
 		shape = new int* [rows];
 		for (int i = 0; i < rows; i++)
 			shape[i] = new int[columns];
 		int shape2[2][3] = {
-			{7,7,0},
-			{0,7,7},
+			{13,13,0},
+			{0,14,13},
 		};
 		for (int i = 0; i < rows; i++)
 			for (int j = 0; j < columns; j++)

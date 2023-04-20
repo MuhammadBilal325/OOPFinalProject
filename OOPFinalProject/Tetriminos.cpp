@@ -58,6 +58,17 @@ in order to "kick" it back into the box.
 */
 void Tetrimino::Rotate(int** board)
 {
+	int pivotxorig = 0, pivotyorig = 0, origx = x, origy = y;
+	//Look for the x and y of the pivot block and store it
+	//Also store original x and y before the rotation
+	for (int i = 0; i < rows; i++)
+		for (int j = 0; j < columns; j++) {
+			if (shape[i][j] == index + 1) {
+				pivotyorig = i;
+				pivotxorig = j;
+			}
+		}
+	//Perform the rotation
 	swap(rows, columns);
 	int** newarr = new int* [rows];
 	for (int i = 0; i < rows; i++)
@@ -69,11 +80,19 @@ void Tetrimino::Rotate(int** board)
 		for (int i = 0, j = columns - 1; i < columns / 2; i++, j--) {
 			swap(newarr[k][i], newarr[k][j]);
 		}
+	//Move the piece so that the pivotx and pivoty and on the same place as before
+	for (int i = 0; i < rows; i++)
+		for (int j = 0; j < columns; j++)
+			if (newarr[i][j] == index + 1) {
+				y += pivotyorig - i;
+				x += pivotxorig - j;
+			}
+	//Store the unrotated version of the piece as well to reverse it later in case of collisison
 	int** temp = shape;
 	shape = newarr;
-	int oldx = x;
 	int pokingout = 0;
 	bool intersect = 0;
+	//Check if newly rotated piece is intersecting, if it is we undo rotation
 	if (Checkintersection(board) || CheckBounds(board)) {
 		for (int j = x; j < x + columns; j++)
 		{
@@ -85,7 +104,8 @@ void Tetrimino::Rotate(int** board)
 		x -= pokingout;
 		if (Checkintersection(board) || CheckBounds(board)) {
 			//Undo move
-			x += pokingout;
+			x = origx;
+			y = origy;
 			shape = temp;
 			swap(rows, columns);
 			for (int i = 0; i < columns; i++)
@@ -103,8 +123,6 @@ void Tetrimino::Rotate(int** board)
 			delete[]temp[i];
 		delete[]temp;
 	}
-
-
 }
 //Returns true if tetrimino is intersecting. False if not intersecting
 bool Tetrimino::Checkintersection(int** board)
@@ -175,6 +193,15 @@ void Tetrimino::DrawTetrimino(sf::RenderWindow*& window) {
 
 void Tetrimino::DrawTetriminoatCoordinates(sf::RenderWindow*& window, int xcoord, int ycoord)
 {
+	int pivotx = 0, pivoty = 0;
+	for(int i=0;i<rows;i++)
+		for(int j=0;j<columns;j++)
+			if (shape[i][j] == index + 1) {
+				pivotx = j;
+				pivoty = i;
+			}
+	xcoord -= pivotx;
+	ycoord -= pivoty;
 	for (int i = ycoord; i < ycoord + rows; i++)
 		for (int j = xcoord; j < xcoord + columns; j++)
 		{

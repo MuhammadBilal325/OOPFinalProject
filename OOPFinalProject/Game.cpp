@@ -1,6 +1,6 @@
 #include"Game.h"
 #include<math.h>
-
+int numofpiecesavailable = 7;
 int getStringLength(std::string s) {
 	int i = 0;
 	for (; s[i] != '\0'; i++);
@@ -14,7 +14,6 @@ void ReplaceStringchar(std::string& s, char c, char r) {
 }
 void Game::InitializeHighscores()
 {
-	name = "Jerry";
 	for (int i = 0; i < 5; i++)
 		highscoreint[i] = 0;
 	std::ifstream fin;
@@ -56,8 +55,8 @@ Game::Game()
 	videoMode.width = 600;
 	window = new sf::RenderWindow(videoMode, "Tetris", sf::Style::Default);
 	window->setFramerateLimit(60);
-	int type = rand() % 7;
-	nexttype = rand() % 7;
+	int type = rand() % numofpiecesavailable;
+	nexttype = rand() % numofpiecesavailable;
 	if (type == 0)
 		CreateTetrimino<Ishape>();
 	else if (type == 1)
@@ -186,6 +185,10 @@ void Game::PollEvents()
 
 	}
 }
+//The update loop is very simple, first we poll the user inputs through the pollevents function, 
+//then we run several if statements to run the block spawning, dropping and line checking functions
+//These if statements are superseded by condition that they only run if the game is running and the name is entered
+
 void Game::Update()
 {
 	PollEvents();  //Get user input
@@ -196,7 +199,7 @@ void Game::Update()
 		if (!CurrentBlock->IsControllable()) {
 			fastfalling = 0;
 			int type = nexttype;
-			nexttype = rand() % 7;
+			nexttype = rand() % numofpiecesavailable;
 			CurrentBlock->SetTetrimino(well.GetBoard());
 			delete CurrentBlock;
 			delete NextBlock;
@@ -303,20 +306,23 @@ void Game::FinalizeScores()
 		ReplaceStringchar(highscorenames[i], '-', ' ');
 	}
 }
+//The printing function prints all the elements one by one
 void Game::Render()
 {
 	window->clear();
-	menu.PrintTetriminoBlock(window);
-	menu.PrintLevel(window, totalscore);
-	menu.PrintScore(window, totalscore);
-	menu.PrintPlayers(window, highscorenames, highscoreint);
-	well.PrintBoard(window);
+	menu.PrintLevel(window, totalscore);//Print the current level
+	menu.PrintScore(window, totalscore);//Print the current score
+	menu.PrintPlayers(window, highscorenames, highscoreint);//Print the leaderboard and previous highscores
+	well.PrintBoard(window);//Print the actual board for playing
+	//If game is running and name has been entered, print the next tetromino in a window at the top right
 	if (!quit && isnameentered) {
-		NextBlock->DrawTetriminoatCoordinates(window, 11, 0);
+		menu.PrintTetriminoBlock(window); //Print the Block where the next tetromino to come will be printed
+		NextBlock->DrawTetriminoatCoordinates(window, 12, 1);
 		CurrentBlock->DrawTetrimino(window);
 	}
 	if (!isnameentered)
 		menu.PrintName(window);
+	//If game has been quit, finalize the scores and print quit screen
 	if (quit) {
 		FinalizeScores();
 		Quit();

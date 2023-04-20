@@ -34,14 +34,18 @@ Well::~Well() {
 
 void Well::PrintBoard(sf::RenderWindow*& window)
 {
+	int tilenum = 0;
 	window->draw(Board);
 	for (int i = 20, k = 0; i < 20 * 36 && k < 20; i += 36, k++)
 		for (int j = 20, l = 0; j < 20 * 36 && l < 10; j += 36, l++)
 		{
-			Tiles[board[k][l]].setPosition(j, i);
-			window->draw(Tiles[board[k][l]]);
+			if (board[k][l] % 2 == 0)
+				tilenum = (board[k][l] / 2);
+			else
+				tilenum = ((board[k][l] - 1) / 2) + 1;
+			Tiles[tilenum].setPosition(j, i);
+			window->draw(Tiles[tilenum]);
 		}
-	window->draw(Tiles[0]);
 }
 
 void Well::CheckForLines(int& score,int&totalscore)
