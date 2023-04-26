@@ -38,7 +38,6 @@ void Game::InitializeHighscores()
 
 Game::Game()
 {
-
 	InitializeHighscores();
 	quit = 0;
 	fastfalling = 0;
@@ -51,10 +50,12 @@ Game::Game()
 	namesize = 1;
 	scoresfinalized = 0;
 	name = "";
-	videoMode.height = 800;
-	videoMode.width = 600;
+	videoMode.height = 750;
+	videoMode.width = 850;
 	window = new sf::RenderWindow(videoMode, "Tetris", sf::Style::Default);
 	window->setFramerateLimit(60);
+	nextTx = 12.35;
+	nextTy = 8;
 	int type = rand() % numofpiecesavailable;
 	nexttype = rand() % numofpiecesavailable;
 	if (type == 0)
@@ -217,14 +218,24 @@ void Game::Update()
 				CreateTetrimino<Tshape>();
 			else if (type == 6)
 				CreateTetrimino<Zshape>();
-			if (nexttype == 0)
+
+			nextTx = 12.35;
+			nextTy = 8;
+			if (nexttype == 0) {
 				CreateNextTetrimino<Ishape>();
+				nextTx = 12.8;
+				nextTy = 7.5;
+				NextBlock->RotateUnbounded();
+			}
 			else if (nexttype == 1)
 				CreateNextTetrimino<Jshape>();
 			else if (nexttype == 2)
 				CreateNextTetrimino<Lshape>();
-			else if (nexttype == 3)
+			else if (nexttype == 3) {
 				CreateNextTetrimino<Oshape>();
+				nextTx = 12.35;
+				nextTy = 7.5;
+			}
 			else if (nexttype == 4)
 				CreateNextTetrimino<Sshape>();
 			else if (nexttype == 5)
@@ -232,6 +243,7 @@ void Game::Update()
 			else if (nexttype == 6)
 				CreateNextTetrimino<Zshape>();
 		}
+
 		if (fastfalling)
 			fallinginterval = 3;
 		else
@@ -310,17 +322,20 @@ void Game::FinalizeScores()
 void Game::Render()
 {
 	window->clear();
-	menu.PrintLevel(window, totalscore);//Print the current level
-	menu.PrintScore(window, totalscore);//Print the current score
+
 	menu.PrintPlayers(window, highscorenames, highscoreint);//Print the leaderboard and previous highscores
-	well.PrintBoard(window);//Print the actual board for playing
-	//If game is running and name has been entered, print the next tetromino in a window at the top right
-	if (!quit && isnameentered) {
-		menu.PrintTetriminoBlock(window); //Print the Block where the next tetromino to come will be printed
-		NextBlock->DrawTetriminoatCoordinates(window, 12, 1);
-		CurrentBlock->DrawTetrimino(window);
+	menu.PrintScore(window, totalscore);//Print the current score
+
+	if (isnameentered) {
+		menu.PrintLevel(window, totalscore);//Print the current level
+		well.PrintBoard(window);//Print the actual board for playing
+		//Print the Block where the next tetromino to come will be printed
+		menu.PrintTetriminoBlock(window);
+		NextBlock->DrawTetriminoatCoordinates(window, nextTx, nextTy);
+		if (!quit)
+			CurrentBlock->DrawTetrimino(window);
 	}
-	if (!isnameentered)
+	else
 		menu.PrintName(window);
 	//If game has been quit, finalize the scores and print quit screen
 	if (quit) {

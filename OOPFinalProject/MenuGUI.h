@@ -15,8 +15,12 @@ private:
 	sf::Text scoreText, levelText, levelNum, scoreNum, Tetromino;
 	sf::Text Highscore, Playernames[5], Playernumbers[5];
 	sf::Text NameText;
-
-
+	//coordinates for easy repositioning of gui elements
+	int scorex, scorey;
+	int levelx, levely;
+	int tutorialx, tutorialy;
+	int nextTetx, nextTety;
+	int highscorex, highscorey;
 public:
 	MenuGUI();
 	~MenuGUI();

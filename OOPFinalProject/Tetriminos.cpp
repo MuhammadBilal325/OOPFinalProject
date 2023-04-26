@@ -124,6 +124,42 @@ void Tetrimino::Rotate(int** board)
 		delete[]temp;
 	}
 }
+void Tetrimino::RotateUnbounded()
+{
+	int pivotxorig = 0, pivotyorig = 0, origx = x, origy = y;
+	//Look for the x and y of the pivot block and store it
+	//Also store original x and y before the rotation
+	for (int i = 0; i < rows; i++)
+		for (int j = 0; j < columns; j++) {
+			if (shape[i][j] == index + 1) {
+				pivotyorig = i;
+				pivotxorig = j;
+			}
+		}
+	//Perform the rotation
+	swap(rows, columns);
+	int** newarr = new int* [rows];
+	for (int i = 0; i < rows; i++)
+		newarr[i] = new int[columns];
+	for (int i = 0; i < rows; i++)
+		for (int j = 0; j < columns; j++)
+			newarr[i][j] = shape[j][i];
+	for (int k = 0; k < rows; k++)
+		for (int i = 0, j = columns - 1; i < columns / 2; i++, j--) {
+			swap(newarr[k][i], newarr[k][j]);
+		}
+	//Move the piece so that the pivotx and pivoty and on the same place as before
+	for (int i = 0; i < rows; i++)
+		for (int j = 0; j < columns; j++)
+			if (newarr[i][j] == index + 1) {
+				y += pivotyorig - i;
+				x += pivotxorig - j;
+			}
+	for (int i = 0; i < columns; i++)
+		delete[]shape[i];
+	delete[]shape;
+	shape = newarr;
+}
 //Returns true if tetrimino is intersecting. False if not intersecting
 bool Tetrimino::Checkintersection(int** board)
 {
@@ -191,9 +227,9 @@ void Tetrimino::DrawTetrimino(sf::RenderWindow*& window) {
 		}
 }
 
-void Tetrimino::DrawTetriminoatCoordinates(sf::RenderWindow*& window, int xcoord, int ycoord)
+void Tetrimino::DrawTetriminoatCoordinates(sf::RenderWindow*& window, float xcoord, float ycoord)
 {
-	int pivotx = 0, pivoty = 0;
+	float pivotx = 0.5, pivoty = 0.5;
 	for(int i=0;i<rows;i++)
 		for(int j=0;j<columns;j++)
 			if (shape[i][j] == index + 1) {
@@ -202,10 +238,10 @@ void Tetrimino::DrawTetriminoatCoordinates(sf::RenderWindow*& window, int xcoord
 			}
 	xcoord -= pivotx;
 	ycoord -= pivoty;
-	for (int i = ycoord; i < ycoord + rows; i++)
-		for (int j = xcoord; j < xcoord + columns; j++)
+	for (float i = ycoord; i < ycoord + rows;i++)
+		for (float j = xcoord; j < xcoord + columns; j++)
 		{
-			if (shape[i - ycoord][j - xcoord] != 0) {
+			if (shape[int(i-ycoord)][int(j-xcoord)] != 0) {
 				Tile.setPosition(((36 * (j + 1)) - 16), ((36 * (i + 1)) - 16));
 				window->draw(Tile);
 			}

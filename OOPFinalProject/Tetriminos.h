@@ -21,6 +21,7 @@ public:
 	bool IsControllable() { return controllable; }
 	void Fall(int **board);
 	virtual void Rotate(int **board);
+	void RotateUnbounded();
 	bool Checkintersection(int **board); 
 	bool CheckBounds(int **board);
 	void MoveX(bool i);
@@ -28,7 +29,7 @@ public:
 	void SetTetrimino(int **board);
 	void ResetTetrimino(int **board);
 	void DrawTetrimino(sf::RenderWindow*& window);
-	void DrawTetriminoatCoordinates(sf::RenderWindow*& window, int xcoord, int ycoord);
+	void DrawTetriminoatCoordinates(sf::RenderWindow*& window, float xcoord, float ycoord);
 };
 
 class Ishape :public Tetrimino {
