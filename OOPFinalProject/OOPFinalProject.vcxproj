@@ -143,6 +143,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="MenuGUI.h" />
     <ClInclude Include="Tetriminos.h" />
+    <ClInclude Include="Well.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Highscores.txt" />

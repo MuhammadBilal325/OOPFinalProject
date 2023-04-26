@@ -1,5 +1,6 @@
 #pragma once
 #include<iostream>
+#include"Well.h"
 #include<SFML/Graphics.hpp>
 class Tetrimino
 {
@@ -19,15 +20,15 @@ public:
 	int GetY() { return y; }
 	void SetControllable(bool i) { controllable = i; }
 	bool IsControllable() { return controllable; }
-	void Fall(int **board);
-	virtual void Rotate(int **board);
+	void Fall(Well&well);
+	virtual void Rotate(Well&well);
 	void RotateUnbounded();
-	bool Checkintersection(int **board); 
-	bool CheckBounds(int **board);
+	bool Checkintersection(Well&well); 
+	bool CheckBounds(Well&well);
 	void MoveX(bool i);
-	void ShiftX(bool i, int **board);
-	void SetTetrimino(int **board);
-	void ResetTetrimino(int **board);
+	void ShiftX(bool i, Well&well);
+	void SetTetrimino(Well&well);
+	void ResetTetrimino(Well&well);
 	void DrawTetrimino(sf::RenderWindow*& window);
 	void DrawTetriminoatCoordinates(sf::RenderWindow*& window, float xcoord, float ycoord);
 };

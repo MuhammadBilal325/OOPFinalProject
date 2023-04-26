@@ -3,29 +3,6 @@
 #include<SFML/Graphics.hpp>
 #include"Tetriminos.h"
 #include"MenuGUI.h"
-template<typename T>
-void swap(T& t1, T& t2)
-{
-	T temp = t1;
-	t1 = t2;
-	t2 = temp;
-}
-class Well {
-private:
-	int** board;
-	sf::Sprite Board;
-	sf::Sprite Tiles[8];
-	sf::Texture Tiletextures[8];
-	sf::Texture BoardTexture;
-public:
-	Well();
-	~Well();
-	int** GetBoard() { return board; }
-	void CheckForLines(int& score, int& totalscore);
-	void SwapUp(int row);
-	void PrintBoard(sf::RenderWindow*& window);
-
-};
 
 class Game
 {

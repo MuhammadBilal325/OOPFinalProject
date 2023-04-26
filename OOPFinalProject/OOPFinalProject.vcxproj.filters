@@ -41,6 +41,9 @@
     <ClInclude Include="MenuGUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Well.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Highscores.txt">

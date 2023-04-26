@@ -114,7 +114,7 @@ const bool Game::getWindowState() const
 template<typename T>
 void Game::CreateTetrimino() {
 	CurrentBlock = new T;
-	if (CurrentBlock->Checkintersection(well.GetBoard()))
+	if (CurrentBlock->Checkintersection(well))
 		quit = true;
 }
 template<typename T>
@@ -142,7 +142,7 @@ void Game::PollEvents()
 			}
 			else if (ev.key.code == sf::Keyboard::Up && ev.type == sf::Event::KeyReleased) {
 				if (!quit)
-					CurrentBlock->Rotate(well.GetBoard());
+					CurrentBlock->Rotate(well);
 			}
 			else if (ev.key.code == sf::Keyboard::Down && ev.type == sf::Event::KeyPressed) {
 				if (!quit) {
@@ -201,7 +201,7 @@ void Game::Update()
 			fastfalling = 0;
 			int type = nexttype;
 			nexttype = rand() % numofpiecesavailable;
-			CurrentBlock->SetTetrimino(well.GetBoard());
+			CurrentBlock->SetTetrimino(well);
 			delete CurrentBlock;
 			delete NextBlock;
 			if (type == 0)
@@ -251,12 +251,12 @@ void Game::Update()
 		if (movementtime.asSeconds() >= 0.1)
 			if (Move != -1) {
 				movementclock.restart();
-				CurrentBlock->ShiftX(Move, well.GetBoard());
+				CurrentBlock->ShiftX(Move, well);
 				Move = -1;
 			}
 		if (fallingtime.asSeconds() * 60 >= fallinginterval && !quit) {
 			fallingclock.restart();
-			CurrentBlock->Fall(well.GetBoard());
+			CurrentBlock->Fall(well);
 		}
 		well.CheckForLines(score, totalscore);
 	}

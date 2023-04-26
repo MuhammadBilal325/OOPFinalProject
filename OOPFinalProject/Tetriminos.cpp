@@ -1,13 +1,6 @@
-#include<iostream>
 #include"Tetriminos.h"
 
-template<typename T>
-void swap(T& t1, T& t2)
-{
-	T temp = t1;
-	t1 = t2;
-	t2 = temp;
-}
+
 Tetrimino::~Tetrimino() {
 	for (int i = 0; i < rows; i++)
 		delete[]shape[i];
@@ -30,17 +23,17 @@ Tetrimino::~Tetrimino() {
 * on the exact frame it sits on top of another block instead of the user having to wait for it to fall again
 * before getting another block
 */
-void Tetrimino::Fall(int** board)
+void Tetrimino::Fall(Well&well)
 {
 	y++;
-	if (Checkintersection(board) || CheckBounds(board))
+	if (Checkintersection(well) || CheckBounds(well))
 	{
 		y--;
 		controllable = 0;
 	}
 	else {
 		y++;
-		if (Checkintersection(board) || CheckBounds(board)) {
+		if (Checkintersection(well) || CheckBounds(well)) {
 			controllable = 0;
 		}
 		y--;
@@ -56,7 +49,7 @@ We count the amount of blocks it is poking out by and then move it that amount o
 in order to "kick" it back into the box.
 
 */
-void Tetrimino::Rotate(int** board)
+void Tetrimino::Rotate(Well&well)
 {
 	int pivotxorig = 0, pivotyorig = 0, origx = x, origy = y;
 	//Look for the x and y of the pivot block and store it
@@ -93,16 +86,16 @@ void Tetrimino::Rotate(int** board)
 	int pokingout = 0;
 	bool intersect = 0;
 	//Check if newly rotated piece is intersecting, if it is we undo rotation
-	if (Checkintersection(board) || CheckBounds(board)) {
+	if (Checkintersection(well) || CheckBounds(well)) {
 		for (int j = x; j < x + columns; j++)
 		{
-			if ((board[y][j] != 0 && intersect == 0) || j >= 10)
+			if ((well.GetBoard()[y][j] != 0 && intersect == 0) || j >= 10)
 				intersect = 1;
 			if (intersect)
 				pokingout++;
 		}
 		x -= pokingout;
-		if (Checkintersection(board) || CheckBounds(board)) {
+		if (Checkintersection(well) || CheckBounds(well)) {
 			//Undo move
 			x = origx;
 			y = origy;
@@ -161,21 +154,21 @@ void Tetrimino::RotateUnbounded()
 	shape = newarr;
 }
 //Returns true if tetrimino is intersecting. False if not intersecting
-bool Tetrimino::Checkintersection(int** board)
+bool Tetrimino::Checkintersection(Well&well)
 {
-	for (int i = y; i < y + rows && i < 20; i++)
-		for (int j = x; j < x + columns && j < 10; j++)
+	for (int i = y; i < y + rows && i < well.GetRows(); i++)
+		for (int j = x; j < x + columns && j <well.GetColumns(); j++)
 			if (i < 20 || i >= 0 || j < 10 || j >= 0)
-				if (board[i][j] != 0 && shape[i - y][j - x] != 0)
+				if (well.GetBoard()[i][j] != 0 && shape[i - y][j - x] != 0)
 					return true;
 	return false;
 }
 //Returns true if tetrimino is currently out of bounds
-bool Tetrimino::CheckBounds(int** board)
+bool Tetrimino::CheckBounds(Well&well)
 {
 	for (int i = y; i < y + rows; i++)
 		for (int j = x; j < x + columns; j++)
-			if ((i >= 20 || i < 0 || j >= 10 || j < 0) && shape[i - y][j - x] != 0)
+			if ((i >= well.GetRows() || i < 0 || j >= well.GetColumns() || j < 0) && shape[i - y][j - x] != 0)
 				return true;
 	return false;
 }
@@ -188,31 +181,31 @@ void Tetrimino::MoveX(bool i)
 		x++;
 }
 
-void Tetrimino::ShiftX(bool i, int** board)
+void Tetrimino::ShiftX(bool i,Well&well)
 {
 	if (controllable)
 	{
 		MoveX(i);
-		if (Checkintersection(board) || CheckBounds(board))
+		if (Checkintersection(well) || CheckBounds(well))
 			MoveX(!i);
 	}
 }
 
-void Tetrimino::SetTetrimino(int** board)
+void Tetrimino::SetTetrimino(Well&well)
 {
 	for (int i = y; i < y + rows; i++)
 		for (int j = x; j < x + columns; j++) {
-			if (i < 20 && j < 10 && shape[i - y][j - x] != 0)
-				board[i][j] = shape[i - y][j - x];
+			if (i < well.GetRows() && j < well.GetColumns() && shape[i - y][j - x] != 0)
+				well.GetBoard()[i][j] = shape[i - y][j - x];
 		}
 }
 
-void Tetrimino::ResetTetrimino(int** board)
+void Tetrimino::ResetTetrimino(Well&well)
 {
 	for (int i = y; i < y + rows; i++)
 		for (int j = x; j < x + columns; j++) {
-			if (i < 20 && j < 10 && shape[i - y][j - x] != 0)
-				board[i][j] = 0;
+			if (i < well.GetRows() && j < well.GetColumns() && shape[i - y][j - x] != 0)
+				well.GetBoard()[i][j] = 0;
 		}
 }
 
