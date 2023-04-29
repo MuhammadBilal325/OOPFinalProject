@@ -13,6 +13,12 @@ MenuGUI::MenuGUI() {
 	if (!font.loadFromFile("./Textures/1up.ttf")) {
 		std::cout << "Error loading font file" << std::endl;
 	}
+	if (!EndingSkullTexture[0].loadFromFile("./Textures/Skull.png")) {
+		std::cout << "Error loading Skull texture file" << std::endl;
+	}
+	if (!EndingSkullTexture[1].loadFromFile("./Textures/Skull1.png")) {
+		std::cout << "Error loading Skull texture file" << std::endl;
+	}
 	scorex = 400;
 	scorey = 250;
 	levelx = 400;
@@ -21,12 +27,12 @@ MenuGUI::MenuGUI() {
 	liney = 470;
 	nextTetx = 400;
 	nextTety = 40;
-	namex = 400;
+	namex = 410;
 	namey = 250;
 	highscorex = 630;
 	highscorey = 40;
-	Quitx = 200;
-	Quity = 150;
+	Quitx = 25;
+	Quity = 25;
 	tutorialx = 380;
 	tutorialy = 10;
 	levelText.setFont(font);
@@ -35,8 +41,8 @@ MenuGUI::MenuGUI() {
 	scoreNum.setFont(font);
 	lineText.setFont(font);
 	lineNum.setFont(font);
-	levelText.setPosition(levelx+10, levely+50);
-	levelNum.setPosition(levelx + 10, levely+100);
+	levelText.setPosition(levelx + 10, levely + 50);
+	levelNum.setPosition(levelx + 10, levely + 100);
 	levelText.setCharacterSize(30);
 	levelNum.setCharacterSize(30);
 	levelText.setString("Level:");
@@ -64,8 +70,8 @@ MenuGUI::MenuGUI() {
 	NameText.setPosition(namex, namey);
 	NameText.setCharacterSize(26);
 
-	PlayerStatsBlock.setPosition(390, 230);
-	PlayerStatsBlock.setSize(sf::Vector2f(220, 400));
+	PlayerStatsBlock.setPosition(400, 230);
+	PlayerStatsBlock.setSize(sf::Vector2f(200, 400));
 	PlayerStatsBlock.setFillColor(sf::Color(0, 0, 0, 0));
 	PlayerStatsBlock.setOutlineColor(sf::Color::White);
 	PlayerStatsBlock.setOutlineThickness(5);
@@ -83,16 +89,23 @@ MenuGUI::MenuGUI() {
 
 
 	//Initialize Quit Block
-	QuitBlock.setSize(sf::Vector2f(400, 400));
-	QuitBlock.setPosition(Quitx+13, Quity);
+	QuitBlock.setSize(sf::Vector2f(-5 + 36 * 10, -5 + 36 * 20));
+	QuitBlock.setPosition(Quitx, Quity);
 	QuitBlock.setFillColor(sf::Color(100, 0, 0, 255));
 	QuitBlock.setOutlineColor(sf::Color::White);
 	QuitBlock.setOutlineThickness(5);
+	QuitBlock.setOutlineColor(sf::Color(255, 0, 0, 255));
 
 	QuitText.setFont(font);
 	QuitText.setCharacterSize(36);
 	QuitText.setString("You lost!");
-	QuitText.setPosition(Quitx+85, Quity+310);
+	QuitText.setPosition(Quitx + 50, Quity + 600);
+	for (int i = 0; i < 2; i++) {
+		EndingSkullSprite[i].setTexture(EndingSkullTexture[i]);
+		EndingSkullSprite[i].setPosition(20, 150);
+		EndingSkullSprite[i].setScale(sf::Vector2f(0.8, 0.8));
+	}
+
 	//Initialize "Enter name" block
 	for (int k = 0, i = tutorialy; k < 4; k++, i += 50) {
 		EnternameDisclaimer[k].setFont(font);
@@ -117,7 +130,7 @@ MenuGUI::MenuGUI() {
 		Playernumbers[k].setPosition(highscorex + 40, i);
 		Playernumbers[k].setCharacterSize(0);
 	}
-	menuBlinking = MenuBlinkClock.getElapsedTime();
+	Blinking = BlinkClock.getElapsedTime();
 
 }
 void MenuGUI::initializePlayerGUI(int* highscoreint) {
@@ -130,12 +143,12 @@ void MenuGUI::initializePlayerGUI(int* highscoreint) {
 }
 //Prints the menu for entering name
 void MenuGUI::PrintNameEnter(sf::RenderWindow*& window) {
-	menuBlinking = MenuBlinkClock.getElapsedTime();
-	if (menuBlinking.asSeconds() > Blinkingtimer)
+	Blinking = BlinkClock.getElapsedTime();
+	if (Blinking.asSeconds() > Blinkingtimer)
 		for (int i = 0; i < 4; i++)
 			window->draw(EnternameDisclaimer[i]);
-	if (menuBlinking.asSeconds() > Blinkingtimer * 2)
-		MenuBlinkClock.restart();
+	if (Blinking.asSeconds() > Blinkingtimer * 2)
+		BlinkClock.restart();
 }
 void MenuGUI::PrintName(sf::RenderWindow*& window) {
 	window->draw(NameText);
@@ -159,9 +172,6 @@ void MenuGUI::PrintLevel(sf::RenderWindow*& window, int& totalscore) {
 	window->draw(levelNum);
 }
 void MenuGUI::PrintScore(sf::RenderWindow*& window, int& totalscore) {
-	window->draw(NameText);
-	//Print small block
-
 	scoreNum.setString(intTostring(totalscore));
 	window->draw(scoreText);
 	window->draw(scoreNum);
@@ -178,6 +188,16 @@ void  MenuGUI::PrintTetriminoBlock(sf::RenderWindow*& window) {
 }
 void MenuGUI::PrintQuitScreen(sf::RenderWindow*& window) {
 	window->draw(QuitBlock);
+	Blinking = BlinkClock.getElapsedTime();
+	if (Blinking.asSeconds() > Blinkingtimer) {
+		window->draw(EndingSkullSprite[0]);
+	}
+	else {
+		window->draw(EndingSkullSprite[1]);
+	}
+	if (Blinking.asSeconds() > Blinkingtimer * 2) {
+		BlinkClock.restart();
+	}
 	window->draw(QuitText);
 }
 MenuGUI::~MenuGUI() {

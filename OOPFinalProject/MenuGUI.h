@@ -8,14 +8,17 @@ private:
 	sf::RectangleShape NameBlock;
 	sf::RectangleShape TetriminoBlock;
 	sf::RectangleShape PlayerStatsBlock;
-	sf::Clock MenuBlinkClock;
-	sf::Time menuBlinking;
+	sf::Clock BlinkClock;
+	sf::Time Blinking;
 	float Blinkingtimer;
 	sf::Text EnternameDisclaimer[4];
 	sf::Font font;
 	sf::Text scoreText, levelText, levelNum, scoreNum, lineText, lineNum, Tetromino, QuitText;
 	sf::Text Highscore, Playernames[5], Playernumbers[5];
 	sf::Text NameText;
+
+	sf::Sprite EndingSkullSprite[2];
+	sf::Texture EndingSkullTexture[2];
 	//coordinates for easy repositioning of gui elements
 	int namex, namey;
 	int scorex, scorey;

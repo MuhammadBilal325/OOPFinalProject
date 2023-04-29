@@ -139,7 +139,8 @@ void Game::PollEvents()
 			window->close();
 		if (ev.key.code == sf::Keyboard::Escape)
 			window->close();
-		if (isnameentered) {
+		if (isnameentered)
+		{
 			if (ev.key.code == sf::Keyboard::Left && ev.type == sf::Event::KeyReleased) {
 				if (!quit)
 					Move = 1;
@@ -190,6 +191,10 @@ void Game::PollEvents()
 		else if (ev.key.code == sf::Keyboard::Enter) {
 			isnameentered = 1;
 			menu.NameText.setString(name);
+		}
+		if (ev.key.code == sf::Keyboard::Q) {
+			quit = 1;
+			isnameentered = 1;
 		}
 
 	}
@@ -335,7 +340,7 @@ void Game::Render()
 	menu.PrintPlayers(window, highscorenames, highscoreint);//Print the leaderboard and previous highscores
 	menu.PrintName(window);
 	if (isnameentered) {
-	    menu.PrintScore(window, totalscore);//Print the current score
+		menu.PrintScore(window, totalscore);//Print the current score
 		menu.PrintLevel(window, totalscore);//Print the current level
 		menu.PrintLines(window, totalscore);
 		well.PrintBoard(window);//Print the actual board for playing
