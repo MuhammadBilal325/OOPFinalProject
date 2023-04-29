@@ -13,7 +13,7 @@ private:
 	float Blinkingtimer;
 	sf::Text EnternameDisclaimer[4];
 	sf::Font font;
-	sf::Text scoreText, levelText, levelNum, scoreNum, lineText, lineNum, Tetromino, QuitText;
+	sf::Text TETRIS,scoreText, levelText, levelNum, scoreNum, lineText, lineNum, Tetromino, QuitText;
 	sf::Text Highscore, Playernames[5], Playernumbers[5];
 	sf::Text NameText;
 
@@ -32,6 +32,7 @@ public:
 	MenuGUI();
 	~MenuGUI();
 	void initializePlayerGUI(int*);
+	void PrintTetris(sf::RenderWindow*&window);
 	void PrintNameEnter(sf::RenderWindow*& window);
 	void PrintName(sf::RenderWindow*& window);
 	void PrintScore(sf::RenderWindow*& window, int&);

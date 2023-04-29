@@ -19,8 +19,8 @@ Well::Well() {
 	}
 
 	BoardShape.setPosition(20, 20);
-	BoardShape.setSize(sf::Vector2f(36*columns,36*rows));
-	BoardShape.setFillColor(sf::Color(255,162,0,255));
+	BoardShape.setSize(sf::Vector2f(36 * columns, 36 * rows));
+	BoardShape.setFillColor(sf::Color(255, 162, 0, 255));
 }
 Well::Well(Well& copy) {
 	rows = copy.rows;
@@ -49,8 +49,8 @@ void Well::PrintBoard(sf::RenderWindow*& window)
 {
 	int tilenum = 0;
 	window->draw(BoardShape);
-	for (int i = 20, k = 0; i < 20 * 36 && k < rows; i += 36, k++)
-		for (int j = 20, l = 0; j < 20 * 36 && l < columns; j += 36, l++)
+	for (int i = 20, k = 0; k < rows; i += 36, k++)
+		for (int j = 20, l = 0; l < columns; j += 36, l++)
 		{
 			if (board[k][l] % 2 == 0)
 				tilenum = (board[k][l] / 2);

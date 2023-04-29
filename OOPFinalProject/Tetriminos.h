@@ -144,7 +144,7 @@ public:
 				shape[i][j] = shape2[i][j];
 	}
 
-	void Rotate(int board[20][10]) {
+	void Rotate(int**board) {
 
 	}
 };

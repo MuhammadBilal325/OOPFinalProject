@@ -54,8 +54,8 @@ Game::Game()
 	videoMode.width = 850;
 	window = new sf::RenderWindow(videoMode, "Tetris", sf::Style::Default);
 	window->setFramerateLimit(60);
-	nextTx = 12.35;
-	nextTy = 2;
+	orignextTx = 12.35;
+	orignextTy = 5.5;
 	int type = rand() % numofpiecesavailable;
 	nexttype = rand() % numofpiecesavailable;
 	if (type == 0)
@@ -73,12 +73,12 @@ Game::Game()
 	else if (type == 6)
 		CreateTetrimino<Zshape>();
 
-	nextTx = 12.35;
-	nextTy = 2.5;
+	nextTx = orignextTx;
+	nextTy = orignextTy;
 	if (nexttype == 0) {
 		CreateNextTetrimino<Ishape>();
-		nextTx = 12.8;
-		nextTy = 2;
+		nextTx = orignextTx + 0.45;
+		nextTy = orignextTy - 0.5;
 		NextBlock->RotateUnbounded();
 	}
 	else if (nexttype == 1)
@@ -87,8 +87,8 @@ Game::Game()
 		CreateNextTetrimino<Lshape>();
 	else if (nexttype == 3) {
 		CreateNextTetrimino<Oshape>();
-		nextTx = 12.35;
-		nextTy = 2;
+		nextTx = orignextTx;
+		nextTy = orignextTy - 0.5;
 	}
 	else if (nexttype == 4)
 		CreateNextTetrimino<Sshape>();
@@ -112,9 +112,6 @@ Game::~Game()
 	delete CurrentBlock;
 	delete NextBlock;
 }
-
-
-
 const bool Game::getWindowState() const
 {
 	return window->isOpen();
@@ -169,7 +166,7 @@ void Game::PollEvents()
 			}
 		}
 		else if (ev.type == sf::Event::TextEntered && ev.text.unicode < 127 && ev.text.unicode > 31) {
-			if (getStringLength(name) < 9) {
+			if (getStringLength(name) < 8) {
 				name += ev.text.unicode;;
 				menu.NameText.setString(name);
 			}
@@ -205,7 +202,7 @@ void Game::PollEvents()
 
 void Game::Update()
 {
-	std::cout << sf::Mouse::getPosition(*window).x << " " << sf::Mouse::getPosition(*window).y << std::endl;
+	//std::cout << sf::Mouse::getPosition(*window).x << " " << sf::Mouse::getPosition(*window).y << std::endl;
 	PollEvents();  //Get user input
 	fallingtime = fallingclock.getElapsedTime();
 	movementtime = movementclock.getElapsedTime();
@@ -233,12 +230,12 @@ void Game::Update()
 			else if (type == 6)
 				CreateTetrimino<Zshape>();
 
-			nextTx = 12.35;
-			nextTy = 2.5;
+			nextTx = orignextTx;
+			nextTy = orignextTy;
 			if (nexttype == 0) {
 				CreateNextTetrimino<Ishape>();
-				nextTx = 12.8;
-				nextTy = 2;
+				nextTx = orignextTx+0.45;
+				nextTy = orignextTy-0.5;
 				NextBlock->RotateUnbounded();
 			}
 			else if (nexttype == 1)
@@ -247,8 +244,8 @@ void Game::Update()
 				CreateNextTetrimino<Lshape>();
 			else if (nexttype == 3) {
 				CreateNextTetrimino<Oshape>();
-				nextTx = 12.35;
-				nextTy = 2;
+				nextTx = orignextTx;
+				nextTy = orignextTy - 0.5;
 			}
 			else if (nexttype == 4)
 				CreateNextTetrimino<Sshape>();
@@ -336,10 +333,10 @@ void Game::FinalizeScores()
 void Game::Render()
 {
 	window->clear();
-
-	menu.PrintPlayers(window, highscorenames, highscoreint);//Print the leaderboard and previous highscores
 	menu.PrintName(window);
+	menu.PrintTetris(window);
 	if (isnameentered) {
+	menu.PrintPlayers(window, highscorenames, highscoreint);//Print the leaderboard and previous highscores
 		menu.PrintScore(window, totalscore);//Print the current score
 		menu.PrintLevel(window, totalscore);//Print the current level
 		menu.PrintLines(window, totalscore);

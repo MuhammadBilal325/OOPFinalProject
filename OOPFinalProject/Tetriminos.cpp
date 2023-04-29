@@ -85,6 +85,7 @@ void Tetrimino::Rotate(Well&well)
 	shape = newarr;
 	int pokingout = 0;
 	bool intersect = 0;
+	bool keep = 0;
 	//Check if newly rotated piece is intersecting, if it is we undo rotation
 	if (Checkintersection(well) || CheckBounds(well)) {
 		for (int j = x; j < x + columns; j++)
@@ -96,22 +97,28 @@ void Tetrimino::Rotate(Well&well)
 		}
 		x -= pokingout;
 		if (Checkintersection(well) || CheckBounds(well)) {
-			//Undo move
-			x = origx;
-			y = origy;
-			shape = temp;
-			swap(rows, columns);
-			for (int i = 0; i < columns; i++)
-				delete[]newarr[i];
-			delete[]newarr;
+			x += pokingout;
+			x++;
+			if (Checkintersection(well) || CheckBounds(well)) {
+				//Undo move
+				x = origx;
+				y = origy;
+				shape = temp;
+				swap(rows, columns);
+				for (int i = 0; i < columns; i++)
+					delete[]newarr[i];
+				delete[]newarr;
+			}
+			else
+				keep = 1;
 		}
-		else {//Keep move
-			for (int i = 0; i < columns; i++)
-				delete[]temp[i];
-			delete[]temp;
-		}
+		else
+			keep = 1;
 	}
-	else {//Keep move
+	else
+		keep = 1;
+	if(keep) {
+		//Keep move
 		for (int i = 0; i < columns; i++)
 			delete[]temp[i];
 		delete[]temp;

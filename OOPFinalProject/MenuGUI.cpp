@@ -20,27 +20,31 @@ MenuGUI::MenuGUI() {
 		std::cout << "Error loading Skull texture file" << std::endl;
 	}
 	scorex = 400;
-	scorey = 250;
+	scorey = 350;
 	levelx = 400;
-	levely = 360;
+	levely = 460;
 	linex = 400;
-	liney = 470;
+	liney = 570;
 	nextTetx = 400;
-	nextTety = 40;
+	nextTety = 140;
 	namex = 410;
-	namey = 250;
+	namey = 350;
 	highscorex = 630;
-	highscorey = 40;
+	highscorey = 140;
 	Quitx = 25;
 	Quity = 25;
-	tutorialx = 380;
-	tutorialy = 10;
+	tutorialx = 150;
+	tutorialy = 300;
 	levelText.setFont(font);
 	levelNum.setFont(font);
 	scoreText.setFont(font);
 	scoreNum.setFont(font);
 	lineText.setFont(font);
 	lineNum.setFont(font);
+	TETRIS.setFont(font);
+	TETRIS.setPosition(430, 20);
+	TETRIS.setCharacterSize(75);
+	TETRIS.setString("TETRIS");
 	levelText.setPosition(levelx + 10, levely + 50);
 	levelNum.setPosition(levelx + 10, levely + 100);
 	levelText.setCharacterSize(30);
@@ -70,7 +74,7 @@ MenuGUI::MenuGUI() {
 	NameText.setPosition(namex, namey);
 	NameText.setCharacterSize(26);
 
-	PlayerStatsBlock.setPosition(400, 230);
+	PlayerStatsBlock.setPosition(400, 330);
 	PlayerStatsBlock.setSize(sf::Vector2f(200, 400));
 	PlayerStatsBlock.setFillColor(sf::Color(0, 0, 0, 0));
 	PlayerStatsBlock.setOutlineColor(sf::Color::White);
@@ -91,7 +95,7 @@ MenuGUI::MenuGUI() {
 	//Initialize Quit Block
 	QuitBlock.setSize(sf::Vector2f(-5 + 36 * 10, -5 + 36 * 20));
 	QuitBlock.setPosition(Quitx, Quity);
-	QuitBlock.setFillColor(sf::Color(100, 0, 0, 255));
+	QuitBlock.setFillColor(sf::Color(100, 0, 0, 180));
 	QuitBlock.setOutlineColor(sf::Color::White);
 	QuitBlock.setOutlineThickness(5);
 	QuitBlock.setOutlineColor(sf::Color(255, 0, 0, 255));
@@ -113,7 +117,7 @@ MenuGUI::MenuGUI() {
 		EnternameDisclaimer[k].setCharacterSize(25);
 	}
 	EnternameDisclaimer[0].setString("Input Name");
-	EnternameDisclaimer[1].setString("To Proceed");
+	EnternameDisclaimer[1].setString("To Proceed:");
 	EnternameDisclaimer[2].setString("Press Enter");
 	EnternameDisclaimer[3].setString("To confirm");
 	Blinkingtimer = 0.5;
@@ -140,6 +144,9 @@ void MenuGUI::initializePlayerGUI(int* highscoreint) {
 			Playernumbers[i].setCharacterSize(23);
 		}
 	}
+}
+void MenuGUI::PrintTetris(sf::RenderWindow*&window) {
+	window->draw(TETRIS);
 }
 //Prints the menu for entering name
 void MenuGUI::PrintNameEnter(sf::RenderWindow*& window) {

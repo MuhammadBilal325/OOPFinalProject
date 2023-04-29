@@ -23,7 +23,7 @@ private:
 	bool quit, fastfalling, isnameentered, scoresfinalized;
 	int  Move, speed, fallinginterval, score, totalscore;
 
-	float nextTx, nextTy;
+	float orignextTx, orignextTy,nextTx,nextTy;
 
 	Tetrimino* CurrentBlock;
 	Tetrimino* NextBlock;
