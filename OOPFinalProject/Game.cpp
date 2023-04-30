@@ -204,11 +204,12 @@ void Game::Update()
 {
 	//std::cout << sf::Mouse::getPosition(*window).x << " " << sf::Mouse::getPosition(*window).y << std::endl;
 	PollEvents();  //Get user input
-	fallingtime = fallingclock.getElapsedTime();
+	fallingtime = fallingclock.getElapsedTime();      //Get elapsed time for falling and movement clocks
 	movementtime = movementclock.getElapsedTime();
-	if (!quit && isnameentered)
+	if (!quit && isnameentered)  //We only run game functions if game hasnt been quit and if name is entered
 	{
-		if (!CurrentBlock->IsControllable()) {
+		if (!CurrentBlock->IsControllable()) //If currentblock is no longer controllable then we need to set the current block into the board and make a new random block
+		{
 			fastfalling = 0;
 			int type = nexttype;
 			nexttype = rand() % numofpiecesavailable;
@@ -228,7 +229,7 @@ void Game::Update()
 			else if (type == 5)
 				CreateTetrimino<Tshape>();
 			else if (type == 6)
-				CreateTetrimino<Zshape>();
+				CreateTetrimino<Kshape>();
 
 			nextTx = orignextTx;
 			nextTy = orignextTy;
@@ -252,12 +253,12 @@ void Game::Update()
 			else if (nexttype == 5)
 				CreateNextTetrimino<Tshape>();
 			else if (nexttype == 6)
-				CreateNextTetrimino<Zshape>();
+				CreateNextTetrimino<Kshape>();
 		}
-
+		//Fallinginterval is based on frames. i.e. how many frames does it take for the tetromino to fall
 		if (fastfalling)
 			fallinginterval = 3;
-		else
+		else //fallinginterval = 60-
 			fallinginterval = speed - ((score / 1000) * 0.1) * speed;
 		if (movementtime.asSeconds() >= 0.1)
 			if (Move != -1) {
