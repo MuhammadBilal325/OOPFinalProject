@@ -9,7 +9,7 @@ Well::Well() {
 		for (int j = 0; j < columns; j++)
 			board[i][j] = 0;
 	char tiletexturepath[21] = "./Textures/Tile1.png";
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		tiletexturepath[15] = i + 1 + 48;
 		if (!Tiletextures[i].loadFromFile(tiletexturepath)) {

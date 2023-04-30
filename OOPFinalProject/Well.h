@@ -13,8 +13,8 @@ private:
 	int rows, columns;
 	int** board;
 	sf::RectangleShape BoardShape;
-	sf::Sprite Tiles[9];
-	sf::Texture Tiletextures[9];
+	sf::Sprite Tiles[8];
+	sf::Texture Tiletextures[8];
 public:
 	Well();
 	Well(Well&);

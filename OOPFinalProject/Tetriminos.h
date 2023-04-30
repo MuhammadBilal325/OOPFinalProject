@@ -226,32 +226,3 @@ public:
 				shape[i][j] = shape2[i][j];
 	}
 };
-class Kshape :public Tetrimino {
-public:
-	Kshape() {
-		char tilepath[21] = "./Textures/Tile1.png";
-		tilepath[15] = 9 + 48;
-		if (!Tiletexture.loadFromFile(tilepath)) {
-			std::cout << "Error loading Z shape tile";
-		}
-		Tile = sf::Sprite(Tiletexture);
-		x = 4;
-		y = 0;
-		rows = 5;
-		columns = 5;
-		index = 15;
-		shape = new int* [rows];
-		for (int i = 0; i < rows; i++)
-			shape[i] = new int[columns];
-		int shape2[5][5] = {
-			{15, 0,15,15,15},
-			{15, 0,15, 0, 0},
-			{15,15,16,15,15},
-			{ 0, 0,15, 0,15},
-			{15,15,15, 0,15}
-		};
-		for (int i = 0; i < rows; i++)
-			for (int j = 0; j < columns; j++)
-				shape[i][j] = shape2[i][j];
-	}
-};

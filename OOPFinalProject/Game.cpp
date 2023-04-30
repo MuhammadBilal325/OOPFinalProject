@@ -229,7 +229,7 @@ void Game::Update()
 			else if (type == 5)
 				CreateTetrimino<Tshape>();
 			else if (type == 6)
-				CreateTetrimino<Kshape>();
+				CreateTetrimino<Zshape>();
 
 			nextTx = orignextTx;
 			nextTy = orignextTy;
@@ -253,7 +253,7 @@ void Game::Update()
 			else if (nexttype == 5)
 				CreateNextTetrimino<Tshape>();
 			else if (nexttype == 6)
-				CreateNextTetrimino<Kshape>();
+				CreateNextTetrimino<Zshape>();
 		}
 		//Fallinginterval is based on frames. i.e. how many frames does it take for the tetromino to fall
 		if (fastfalling)
