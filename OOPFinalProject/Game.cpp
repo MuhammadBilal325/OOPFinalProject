@@ -196,6 +196,10 @@ void Game::PollEvents()
 
 	}
 }
+
+void Game::Restart() {
+//window->draw();
+}
 //The update loop is very simple, first we poll the user inputs through the pollevents function, 
 //then we run several if statements to run the block spawning, dropping and line checking functions
 //These if statements are superseded by condition that they only run if the game is running and the name is entered
@@ -235,8 +239,8 @@ void Game::Update()
 			nextTy = orignextTy;
 			if (nexttype == 0) {
 				CreateNextTetrimino<Ishape>();
-				nextTx = orignextTx+0.45;
-				nextTy = orignextTy-0.5;
+				nextTx = orignextTx + 0.45;
+				nextTy = orignextTy - 0.5;
 				NextBlock->RotateUnbounded();
 			}
 			else if (nexttype == 1)
@@ -272,6 +276,9 @@ void Game::Update()
 		}
 		well.CheckForLines(score, totalscore);
 	}
+	if (quit) {
+		FinalizeScores();
+	}
 	score %= 8000;
 }
 
@@ -291,6 +298,13 @@ void Game::FinalizeScores()
 		highscorenames[highscoressize] = name;
 		menu.initializePlayerGUI(highscoreint);
 	}
+	//If there are 5 highscores already we replace the appropiate one with ours
+	else if (highscoressize == 5) {
+		if (highscoreint[4] < totalscore) {
+			highscoreint[4] = totalscore;
+			highscorenames[4] = name;
+		}
+	}
 	//Rearrange the scores
 	for (int i = 0; i < 5; i++) {
 		for (int j = i; j < 5; j++) {
@@ -298,19 +312,6 @@ void Game::FinalizeScores()
 				swap(highscoreint[i], highscoreint[j]);
 				swap(highscorenames[i], highscorenames[j]);
 			}
-		}
-	}
-	//If there are 5 highscores already we replace the appropiate one with ours
-	if (highscoressize == 5) {
-
-		int largest = 4;
-		for (int i = 0; i < 5; i++) {
-			if (highscoreint[i] > highscoreint[largest] && highscoreint[i] < totalscore)
-				largest = i;
-		}
-		if (totalscore > highscoreint[largest]) {
-			highscoreint[largest] = totalscore;
-			highscorenames[largest] = name;
 		}
 	}
 	//Write the highscores back to the text file
@@ -337,7 +338,7 @@ void Game::Render()
 	menu.PrintName(window);
 	menu.PrintTetris(window);
 	if (isnameentered) {
-	menu.PrintPlayers(window, highscorenames, highscoreint);//Print the leaderboard and previous highscores
+		menu.PrintPlayers(window, highscorenames, highscoreint);//Print the leaderboard and previous highscores
 		menu.PrintScore(window, totalscore);//Print the current score
 		menu.PrintLevel(window, totalscore);//Print the current level
 		menu.PrintLines(window, totalscore);
@@ -352,8 +353,8 @@ void Game::Render()
 		menu.PrintNameEnter(window);
 	//If game has been quit, finalize the scores and print quit screen
 	if (quit) {
-		FinalizeScores();
 		Quit();
+		Restart();
 	}
 	window->display();
 }

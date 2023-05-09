@@ -41,6 +41,7 @@ public:
 	template<typename T>void CreateTetrimino();
 	template<typename T>void CreateNextTetrimino();
 	void Update();
+	void Restart();
 	void Render();
 	void Quit();
 	void FinalizeScores();

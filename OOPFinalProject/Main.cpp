@@ -5,7 +5,7 @@
 using namespace std;
 int main()
 {
-	srand(1);
+	srand(time(0));
 	Game game;
 	while (game.getWindowState())
 	{
