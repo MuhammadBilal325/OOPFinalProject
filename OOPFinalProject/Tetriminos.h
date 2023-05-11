@@ -1,4 +1,5 @@
 #pragma once
+
 #include<iostream>
 #include"Well.h"
 #include<SFML/Graphics.hpp>
@@ -61,6 +62,7 @@ public:
 			for (int j = 0; j < columns; j++)
 				shape[i][j] = shape2[i][j];
 	}
+
 
 };
 class Jshape :public Tetrimino {

@@ -1,9 +1,9 @@
+#pragma once
 #include<iostream>
 #include<fstream>
 #include<SFML/Graphics.hpp>
 #include"Tetriminos.h"
-#include"MenuGUI.h"
-
+#include"MenuGUI.h" 
 class Game
 {
 private:
@@ -20,7 +20,7 @@ private:
 	std::string name;
 	int namesize;
 	Well well;
-	bool quit, fastfalling, isnameentered, scoresfinalized;
+	bool quit, fastfalling, isnameentered, scoresfinalized,restartmenu,restart;
 	int  Move, speed, fallinginterval, score, totalscore;
 
 	float orignextTx, orignextTy,nextTx,nextTy;
@@ -43,7 +43,6 @@ public:
 	void Update();
 	void Restart();
 	void Render();
-	void Quit();
 	void FinalizeScores();
 };
 

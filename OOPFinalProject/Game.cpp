@@ -1,5 +1,6 @@
+
 #include"Game.h"
-#include<math.h>
+#include<math.h> 
 int numofpiecesavailable = 7;
 int getStringLength(std::string s) {
 	int i = 0;
@@ -119,8 +120,11 @@ const bool Game::getWindowState() const
 template<typename T>
 void Game::CreateTetrimino() {
 	CurrentBlock = new T;
-	if (CurrentBlock->Checkintersection(well))
+	if (CurrentBlock->Checkintersection(well)) {
 		quit = true;
+		delete CurrentBlock;
+		CurrentBlock = nullptr;
+	}
 }
 template<typename T>
 void Game::CreateNextTetrimino() {
@@ -136,7 +140,7 @@ void Game::PollEvents()
 			window->close();
 		if (ev.key.code == sf::Keyboard::Escape)
 			window->close();
-		if (isnameentered)
+		if (isnameentered && !quit)
 		{
 			if (ev.key.code == sf::Keyboard::Left && ev.type == sf::Event::KeyReleased) {
 				if (!quit)
@@ -164,41 +168,96 @@ void Game::PollEvents()
 				score += 1000;
 				totalscore += 1000;
 			}
+			else if (ev.key.code == sf::Keyboard::Q) {
+				quit = 1;
+				isnameentered = 1;
+			}
 		}
-		else if (ev.type == sf::Event::TextEntered && ev.text.unicode < 127 && ev.text.unicode > 31) {
-			if (getStringLength(name) < 8) {
-				name += ev.text.unicode;;
+		if (!isnameentered) {
+			if (ev.type == sf::Event::TextEntered && ev.text.unicode < 127 && ev.text.unicode > 31) {
+				if (getStringLength(name) < 8) {
+					name += ev.text.unicode;;
+					menu.NameText.setString(name);
+				}
+			}
+			else if (ev.key.code == sf::Keyboard::Backspace) {
+				namesize = getStringLength(name);
+				if (namesize > 0) {
+					char* newarr = new char[namesize];
+					for (int i = 0; i < namesize; i++)
+						newarr[i] = name[i];
+					newarr[namesize - 1] = '\0';
+					name = newarr;
+					delete[]newarr;
+				}
+				else
+					name = "";
+				menu.NameText.setString(name);
+			}
+			else if (ev.key.code == sf::Keyboard::Enter) {
+				isnameentered = 1;
 				menu.NameText.setString(name);
 			}
 		}
-		else if (ev.key.code == sf::Keyboard::Backspace) {
-			namesize = getStringLength(name);
-			if (namesize > 0) {
-				char* newarr = new char[namesize];
-				for (int i = 0; i < namesize; i++)
-					newarr[i] = name[i];
-				newarr[namesize - 1] = '\0';
-				name = newarr;
-				delete[]newarr;
-			}
-			else
-				name = "";
-			menu.NameText.setString(name);
-		}
-		else if (ev.key.code == sf::Keyboard::Enter) {
-			isnameentered = 1;
-			menu.NameText.setString(name);
-		}
-		if (ev.key.code == sf::Keyboard::Q) {
-			quit = 1;
-			isnameentered = 1;
+		if (quit && ev.type==sf::Event::MouseButtonReleased && sf::Mouse::getPosition(*window).x > 90 && sf::Mouse::getPosition(*window).x < 310 && sf::Mouse::getPosition(*window).y > 675 && sf::Mouse::getPosition(*window).y < 710) {
+			std::cout << "Restart Called";
+			Restart();
 		}
 
 	}
 }
 
 void Game::Restart() {
-//window->draw();
+	
+	delete NextBlock;
+	NextBlock = nullptr;
+	quit = 0;
+	fastfalling = 0;
+	Move = -1;
+	fallinginterval = 60;
+	score = 0;
+	totalscore = 0;
+	scoresfinalized = 0;
+	int type = rand() % numofpiecesavailable;
+	nexttype = rand() % numofpiecesavailable;
+	well.ResetBoard();
+	if (type == 0)
+		CreateTetrimino<Ishape>();
+	else if (type == 1)
+		CreateTetrimino<Jshape>();
+	else if (type == 2)
+		CreateTetrimino<Lshape>();
+	else if (type == 3)
+		CreateTetrimino<Oshape>();
+	else if (type == 4)
+		CreateTetrimino<Sshape>();
+	else if (type == 5)
+		CreateTetrimino<Tshape>();
+	else if (type == 6)
+		CreateTetrimino<Zshape>();
+	nextTx = orignextTx;
+	nextTy = orignextTy;
+	if (nexttype == 0) {
+		CreateNextTetrimino<Ishape>();
+		nextTx = orignextTx + 0.45;
+		nextTy = orignextTy - 0.5;
+		NextBlock->RotateUnbounded();
+	}
+	else if (nexttype == 1)
+		CreateNextTetrimino<Jshape>();
+	else if (nexttype == 2)
+		CreateNextTetrimino<Lshape>();
+	else if (nexttype == 3) {
+		CreateNextTetrimino<Oshape>();
+		nextTx = orignextTx;
+		nextTy = orignextTy - 0.5;
+	}
+	else if (nexttype == 4)
+		CreateNextTetrimino<Sshape>();
+	else if (nexttype == 5)
+		CreateNextTetrimino<Tshape>();
+	else if (nexttype == 6)
+		CreateNextTetrimino<Zshape>();
 }
 //The update loop is very simple, first we poll the user inputs through the pollevents function, 
 //then we run several if statements to run the block spawning, dropping and line checking functions
@@ -220,6 +279,8 @@ void Game::Update()
 			CurrentBlock->SetTetrimino(well);
 			delete CurrentBlock;
 			delete NextBlock;
+			CurrentBlock = nullptr;
+			NextBlock = nullptr;
 			if (type == 0)
 				CreateTetrimino<Ishape>();
 			else if (type == 1)
@@ -282,9 +343,6 @@ void Game::Update()
 	score %= 8000;
 }
 
-void Game::Quit() {
-	menu.PrintQuitScreen(window);
-}
 
 void Game::FinalizeScores()
 {
@@ -353,8 +411,7 @@ void Game::Render()
 		menu.PrintNameEnter(window);
 	//If game has been quit, finalize the scores and print quit screen
 	if (quit) {
-		Quit();
-		Restart();
+		menu.PrintQuitScreen(window);
 	}
 	window->display();
 }

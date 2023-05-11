@@ -1,6 +1,6 @@
+
 #include"Tetriminos.h"
-
-
+ 
 Tetrimino::~Tetrimino() {
 	for (int i = 0; i < rows; i++)
 		delete[]shape[i];

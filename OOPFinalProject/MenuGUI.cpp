@@ -1,3 +1,4 @@
+
 #include"MenuGUI.h"
 std::string intTostring(int input) {
 	if (input == 0)
@@ -110,6 +111,10 @@ MenuGUI::MenuGUI() {
 		EndingSkullSprite[i].setScale(sf::Vector2f(0.8, 0.8));
 	}
 
+	Restart.setFont(font);
+	Restart.setCharacterSize(36);
+	Restart.setString("RESTART");
+	Restart.setPosition(Quitx + 65, Quity + 650);
 	//Initialize "Enter name" block
 	for (int k = 0, i = tutorialy; k < 4; k++, i += 50) {
 		EnternameDisclaimer[k].setFont(font);
@@ -206,6 +211,7 @@ void MenuGUI::PrintQuitScreen(sf::RenderWindow*& window) {
 		BlinkClock.restart();
 	}
 	window->draw(QuitText);
+	window->draw(Restart);
 }
 MenuGUI::~MenuGUI() {
 

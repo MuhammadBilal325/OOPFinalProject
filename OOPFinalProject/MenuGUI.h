@@ -13,7 +13,7 @@ private:
 	float Blinkingtimer;
 	sf::Text EnternameDisclaimer[4];
 	sf::Font font;
-	sf::Text TETRIS,scoreText, levelText, levelNum, scoreNum, lineText, lineNum, Tetromino, QuitText;
+	sf::Text TETRIS,scoreText, levelText, levelNum, scoreNum, lineText, lineNum, Tetromino, QuitText,Restart;
 	sf::Text Highscore, Playernames[5], Playernumbers[5];
 	sf::Text NameText;
 

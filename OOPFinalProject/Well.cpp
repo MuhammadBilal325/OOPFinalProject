@@ -1,4 +1,5 @@
-#include"Well.h"
+
+#include"Well.h" 
 Well::Well() {
 	rows = 20;
 	columns = 10;
@@ -21,6 +22,11 @@ Well::Well() {
 	BoardShape.setPosition(20, 20);
 	BoardShape.setSize(sf::Vector2f(36 * columns, 36 * rows));
 	BoardShape.setFillColor(sf::Color(255, 162, 0, 255));
+}
+void Well::ResetBoard() {
+	for (int i = 0; i < rows; i++)
+		for (int j = 0; j < columns; j++)
+			board[i][j] = 0;
 }
 Well::Well(Well& copy) {
 	rows = copy.rows;

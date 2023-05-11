@@ -2,6 +2,7 @@
 #include"Game.h"
 #include<iostream>
 #include<fstream>
+
 using namespace std;
 int main()
 {
@@ -10,6 +11,7 @@ int main()
 	while (game.getWindowState())
 	{
 		game.Update();
- 		game.Render();
+		game.Render();
 	}
+	return 0;
 }

@@ -19,6 +19,7 @@ public:
 	Well();
 	Well(Well&);
 	~Well();
+	void ResetBoard();
 	int** GetBoard() { return board; }
 	void CheckForLines(int& score, int& totalscore);
 	void SwapUp(int row);
