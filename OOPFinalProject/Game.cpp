@@ -262,7 +262,6 @@ void Game::Update()
 			fastfalling = 0;
 			int type = nexttype;
 			nexttype = rand() % numofpiecesavailable;
-			CurrentBlock->SetTetrimino(well);
 			delete CurrentBlock;
 			delete NextBlock;
 			CurrentBlock = nullptr;
@@ -281,7 +280,6 @@ void Game::Update()
 				CreateTetrimino<Tshape>();
 			else if (type == 6)
 				CreateTetrimino<Zshape>();
-
 			nextTx = orignextTx;
 			nextTy = orignextTy;
 			if (nexttype == 0) {
@@ -322,8 +320,12 @@ void Game::Update()
 		if (fallingtime.asSeconds() >= timetofall) {
 			fallingclock.restart();
 			CurrentBlock->Fall(well);
+			if (!CurrentBlock->IsControllable()) {
+			    CurrentBlock->SetTetrimino(well);
+				well.CheckForLines(score,totalscore);
+			}
 		}
-		well.CheckForLines(score, totalscore);
+		
 	}
 	if (quit) {
 		FinalizeScores();
