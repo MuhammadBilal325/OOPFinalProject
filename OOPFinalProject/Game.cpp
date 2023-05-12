@@ -44,8 +44,7 @@ Game::Game()
 	fastfalling = 0;
 	isnameentered = 0;
 	Move = -1;
-	speed = 60;
-	fallinginterval = 60;
+	timetofall = 1;
 	score = 0;
 	totalscore = 0;
 	namesize = 1;
@@ -214,7 +213,7 @@ void Game::Restart() {
 	quit = 0;
 	fastfalling = 0;
 	Move = -1;
-	fallinginterval = 60;
+	timetofall = 1;
 	score = 0;
 	totalscore = 0;
 	scoresfinalized = 0;
@@ -320,18 +319,20 @@ void Game::Update()
 			else if (nexttype == 6)
 				CreateNextTetrimino<Zshape>();
 		}
-		//Fallinginterval is based on frames. i.e. how many frames does it take for the tetromino to fall
 		if (fastfalling)
-			fallinginterval = 3;
-		else //fallinginterval = 60-
-			fallinginterval = speed - ((score / 1000) * 0.1) * speed;
+			timetofall = 0.04;
+		else {
+			timetofall = 1;
+			for (int i = 0; i < score / 1000; i++)
+				timetofall *= 0.9;
+		}
 		if (movementtime.asSeconds() >= 0.1)
 			if (Move != -1) {
 				movementclock.restart();
 				CurrentBlock->ShiftX(Move, well);
 				Move = -1;
 			}
-		if (fallingtime.asSeconds() * 60 >= fallinginterval && !quit) {
+		if (fallingtime.asSeconds() >= timetofall) {
 			fallingclock.restart();
 			CurrentBlock->Fall(well);
 		}

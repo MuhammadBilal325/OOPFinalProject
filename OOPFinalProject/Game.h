@@ -21,9 +21,9 @@ private:
 	int namesize;
 	Well well;
 	bool quit, fastfalling, isnameentered, scoresfinalized,restartmenu,restart;
-	int  Move, speed, fallinginterval, score, totalscore;
+	int  Move, score, totalscore;
 
-	float orignextTx, orignextTy,nextTx,nextTy;
+	float orignextTx, orignextTy,nextTx,nextTy,timetofall;
 
 	Tetrimino* CurrentBlock;
 	Tetrimino* NextBlock;
