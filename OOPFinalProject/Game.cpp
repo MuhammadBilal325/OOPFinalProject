@@ -15,26 +15,21 @@ void ReplaceStringchar(std::string& s, char c, char r) {
 }
 void Game::InitializeHighscores()
 {
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 5; i++) {
+		highscorenames[i] = "";
 		highscoreint[i] = 0;
+	}
 	std::ifstream fin;
 	fin.open("Highscores.txt");
 	int x = 0;
 	while (x<5 && fin >> highscorenames[x] >> highscoreint[x]) {
 		x++;
 	}
-	if (x < 5)
-		for (int i = x; i < 5; i++) {
-			highscorenames[i] = "";
-			highscoreint[x] = 0;
-		}
-
 	for (int i = 0; i < 5; i++) {
 		ReplaceStringchar(highscorenames[i], '-', ' ');
 	}
 	highscoressize = x;
 	fin.close();
-
 }
 
 Game::Game()
@@ -177,9 +172,10 @@ void Game::PollEvents()
 			Restart();
 		}
 		if (!isnameentered) {
-			if (ev.type == sf::Event::TextEntered && ev.text.unicode < 127 && ev.text.unicode > 31)
+			if (ev.type == sf::Event::TextEntered && ev.text.unicode < 127 && ev.text.unicode > 31) {
 				if (getStringLength(name) < 8)
 					name += ev.text.unicode;
+			}
 				else if (ev.key.code == sf::Keyboard::Backspace) {
 					namesize = getStringLength(name);
 					if (namesize > 0) {
@@ -198,7 +194,7 @@ void Game::PollEvents()
 }
 
 void Game::Restart() {
-
+	InitializeHighscores();
 	delete NextBlock;
 	NextBlock = nullptr;
 	quit = 0;
