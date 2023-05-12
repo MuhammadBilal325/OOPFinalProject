@@ -172,42 +172,33 @@ void Game::PollEvents()
 				isnameentered = 1;
 			}
 		}
-		if (!isnameentered) {
-			if (ev.type == sf::Event::TextEntered && ev.text.unicode < 127 && ev.text.unicode > 31) {
-				if (getStringLength(name) < 8) {
-					name += ev.text.unicode;;
-					menu.NameText.setString(name);
-				}
-			}
-			else if (ev.key.code == sf::Keyboard::Backspace) {
-				namesize = getStringLength(name);
-				if (namesize > 0) {
-					char* newarr = new char[namesize];
-					for (int i = 0; i < namesize; i++)
-						newarr[i] = name[i];
-					newarr[namesize - 1] = '\0';
-					name = newarr;
-					delete[]newarr;
-				}
-				else
-					name = "";
-				menu.NameText.setString(name);
-			}
-			else if (ev.key.code == sf::Keyboard::Enter) {
-				isnameentered = 1;
-				menu.NameText.setString(name);
-			}
-		}
-		if (quit && ev.type==sf::Event::MouseButtonReleased && sf::Mouse::getPosition(*window).x > 90 && sf::Mouse::getPosition(*window).x < 310 && sf::Mouse::getPosition(*window).y > 675 && sf::Mouse::getPosition(*window).y < 710) {
+		else if (quit && ev.type == sf::Event::MouseButtonReleased && sf::Mouse::getPosition(*window).x > 90 && sf::Mouse::getPosition(*window).x < 310 && sf::Mouse::getPosition(*window).y > 675 && sf::Mouse::getPosition(*window).y < 710) {
 			std::cout << "Restart Called";
 			Restart();
 		}
-
+		if (!isnameentered) {
+			if (ev.type == sf::Event::TextEntered && ev.text.unicode < 127 && ev.text.unicode > 31)
+				if (getStringLength(name) < 8)
+					name += ev.text.unicode;
+				else if (ev.key.code == sf::Keyboard::Backspace) {
+					namesize = getStringLength(name);
+					if (namesize > 0) {
+						std::string newname = name.substr(0, namesize - 1);
+						newname[namesize - 1] = '\0';
+						name = newname;
+					}
+					else
+						name = "";
+				}
+				else if (ev.key.code == sf::Keyboard::Enter)
+					isnameentered = 1;
+			menu.NameText.setString(name);
+		}
 	}
 }
 
 void Game::Restart() {
-	
+
 	delete NextBlock;
 	NextBlock = nullptr;
 	quit = 0;
