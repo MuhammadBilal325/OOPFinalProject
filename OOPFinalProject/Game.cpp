@@ -136,15 +136,15 @@ void Game::PollEvents()
 			window->close();
 		if (isnameentered && !quit)
 		{
-			if (ev.key.code == sf::Keyboard::Left && ev.type == sf::Event::KeyReleased) {
+			if (ev.key.code == sf::Keyboard::Left && ev.type == sf::Event::KeyPressed) {
 				if (!quit)
 					Move = 1;
 			}
-			else if (ev.key.code == sf::Keyboard::Right && ev.type == sf::Event::KeyReleased) {
+			else if (ev.key.code == sf::Keyboard::Right && ev.type == sf::Event::KeyPressed) {
 				if (!quit)
 					Move = 0;
 			}
-			else if (ev.key.code == sf::Keyboard::Up && ev.type == sf::Event::KeyReleased) {
+			else if (ev.key.code == sf::Keyboard::Up && ev.type == sf::Event::KeyPressed) {
 				if (!quit)
 					CurrentBlock->Rotate(well);
 			}
@@ -307,13 +307,13 @@ void Game::Update()
 				CreateNextTetrimino<Zshape>();
 		}
 		if (fastfalling)
-			timetofall = 0.05;
+			timetofall = 0.025;
 		else {
 			timetofall = 1;
 			for (int i = 0; i < score / 1000; i++)
 				timetofall *= 0.9;
 		}
-		if (movementtime.asSeconds() >= 0.1)
+		if (movementtime.asSeconds() >= 0.05)
 			if (Move != -1) {
 				movementclock.restart();
 				CurrentBlock->ShiftX(Move, well);
