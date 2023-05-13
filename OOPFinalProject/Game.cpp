@@ -259,6 +259,8 @@ void Game::Update()
 	{
 		if (!CurrentBlock->IsControllable()) //If currentblock is no longer controllable then we need to set the current block into the board and make a new random block
 		{
+			CurrentBlock->SetTetrimino(well);
+			well.CheckForLines(score, totalscore);
 			fastfalling = 0;
 			int type = nexttype;
 			nexttype = rand() % numofpiecesavailable;
@@ -305,7 +307,7 @@ void Game::Update()
 				CreateNextTetrimino<Zshape>();
 		}
 		if (fastfalling)
-			timetofall = 0.04;
+			timetofall = 0.05;
 		else {
 			timetofall = 1;
 			for (int i = 0; i < score / 1000; i++)
@@ -320,10 +322,6 @@ void Game::Update()
 		if (fallingtime.asSeconds() >= timetofall) {
 			fallingclock.restart();
 			CurrentBlock->Fall(well);
-			if (!CurrentBlock->IsControllable()) {
-			    CurrentBlock->SetTetrimino(well);
-				well.CheckForLines(score,totalscore);
-			}
 		}
 		
 	}
