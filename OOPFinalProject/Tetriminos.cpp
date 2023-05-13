@@ -207,15 +207,6 @@ void Tetrimino::SetTetrimino(Well&well)
 		}
 }
 
-void Tetrimino::ResetTetrimino(Well&well)
-{
-	for (int i = y; i < y + rows; i++)
-		for (int j = x; j < x + columns; j++) {
-			if (i < well.GetRows() && j < well.GetColumns() && shape[i - y][j - x] != 0)
-				well.GetBoard()[i][j] = 0;
-		}
-}
-
 void Tetrimino::DrawTetrimino(sf::RenderWindow*& window) {
 	for (int i = y; i < y + rows; i++)
 		for (int j = x; j < x + columns; j++)

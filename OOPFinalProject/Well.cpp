@@ -53,6 +53,7 @@ Well::~Well() {
 
 void Well::PrintBoard(sf::RenderWindow*& window)
 {
+	system("cls");
 	int tilenum = 0;
 	window->draw(BoardShape);
 	for (int i = 20, k = 0; k < rows; i += 36, k++)
@@ -73,7 +74,7 @@ void Well::CheckForLines(int& score, int& totalscore)
 	for (int i = 0; i < rows; i++)
 	{
 		continuos = 1;
-		for (int j = 0; j < columns; j++)
+		for (int j = 0; j < columns && continuos==1; j++)
 			if (board[i][j] == 0)
 				continuos = 0;
 		if (continuos)

@@ -29,7 +29,6 @@ public:
 	void MoveX(bool i);
 	void ShiftX(bool i, Well&well);
 	void SetTetrimino(Well&well);
-	void ResetTetrimino(Well&well);
 	void DrawTetrimino(sf::RenderWindow*& window);
 	void DrawTetriminoatCoordinates(sf::RenderWindow*& window, float xcoord, float ycoord);
 };
