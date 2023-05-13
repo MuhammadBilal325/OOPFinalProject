@@ -167,8 +167,7 @@ void Game::PollEvents()
 				isnameentered = 1;
 			}
 		}
-		else if (quit && ev.type == sf::Event::MouseButtonReleased && sf::Mouse::getPosition(*window).x > 90 && sf::Mouse::getPosition(*window).x < 310 && sf::Mouse::getPosition(*window).y > 675 && sf::Mouse::getPosition(*window).y < 710) {
-			std::cout << "Restart Called";
+		else if (quit && ev.type==sf::Event::KeyPressed && ev.key.code==sf::Keyboard::R){
 			Restart();
 		}
 		if (!isnameentered) {

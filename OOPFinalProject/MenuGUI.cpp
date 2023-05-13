@@ -112,9 +112,9 @@ MenuGUI::MenuGUI() {
 	}
 
 	Restart.setFont(font);
-	Restart.setCharacterSize(36);
-	Restart.setString("RESTART");
-	Restart.setPosition(Quitx + 65, Quity + 650);
+	Restart.setCharacterSize(25);
+	Restart.setString("Press R to Restart");
+	Restart.setPosition(Quitx, Quity + 650);
 	//Initialize "Enter name" block
 	for (int k = 0, i = tutorialy; k < 4; k++, i += 50) {
 		EnternameDisclaimer[k].setFont(font);

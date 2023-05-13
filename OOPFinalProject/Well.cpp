@@ -53,7 +53,6 @@ Well::~Well() {
 
 void Well::PrintBoard(sf::RenderWindow*& window)
 {
-	system("cls");
 	int tilenum = 0;
 	window->draw(BoardShape);
 	for (int i = 20, k = 0; k < rows; i += 36, k++)
