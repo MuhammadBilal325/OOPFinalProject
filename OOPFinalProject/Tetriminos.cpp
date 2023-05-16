@@ -33,9 +33,10 @@ void Tetrimino::Fall(Well&well)
 	}
 	else {
 		y++;
-		if (Checkintersection(well) || CheckBounds(well)) {
-			controllable = 0;
-		}
+		if (Checkintersection(well) || CheckBounds(well))
+			abouttoset = 1;
+		else
+			abouttoset = 0;
 		y--;
 	}
 }
@@ -214,6 +215,10 @@ void Tetrimino::DrawTetrimino(sf::RenderWindow*& window) {
 			if (shape[i - y][j - x] != 0) {
 				Tile.setPosition(((36 * (j + 1)) - 16), ((36 * (i + 1)) - 16));
 				window->draw(Tile);
+				if (abouttoset) {
+					TileOutline.setPosition(((36 * (j + 1)) - 16), ((36 * (i + 1)) - 16));
+					window->draw(TileOutline);
+				}
 			}
 		}
 }

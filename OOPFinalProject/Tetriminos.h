@@ -11,8 +11,8 @@ protected:
 	int x, y; //The actual positions of the tetromino relative to the board, 0,0 at top left.
 	int index;//The value of the blocks of the tetromino, 1 for the first, 3 for the second etc. Used to check for the pivot block
 	bool controllable,abouttoset;
-	sf::Sprite Tile,TileWhite;
-	sf::Texture Tiletexture,TileTextureWhite;
+	sf::Sprite Tile,TileOutline;
+	sf::Texture Tiletexture, TileOutlineTexture;
 public:
 	Tetrimino() :x(0), y(0), controllable(1), rows(0), columns(0)
 	{};
@@ -44,12 +44,12 @@ public:
 		if (!Tiletexture.loadFromFile(tilepath)) {
 			std::cout << "Error loading I shape tile";
 		}
-		tilepath[11] ='W';
-		if (!TileTextureWhite.loadFromFile(tilepath)) {
-			std::cout << "Error loading I shape tile";
+		char tilepath2[27] = "./Textures/TileOutline.png";
+		if (!TileOutlineTexture.loadFromFile(tilepath2)) {
+			std::cout << "Error loading Tile Outline";
 		}
 		Tile=sf::Sprite(Tiletexture);
-		TileWhite = sf::Sprite(TileTextureWhite);
+		TileOutline = sf::Sprite(TileOutlineTexture);
 		x = 4;
 		y = 0;
 		rows = 4;
@@ -81,6 +81,12 @@ public:
 		if (!Tiletexture.loadFromFile(tilepath)) {
 			std::cout << "Error loading J shape tile";
 		}
+		char tilepath2[27] = "./Textures/TileOutline.png";
+		if (!TileOutlineTexture.loadFromFile(tilepath2)) {
+			std::cout << "Error loading Tile Outline";
+		}
+		Tile = sf::Sprite(Tiletexture);
+		TileOutline = sf::Sprite(TileOutlineTexture);
 		Tile = sf::Sprite(Tiletexture);
 		x = 4;
 		y = 0;
@@ -111,6 +117,12 @@ public:
 		if (!Tiletexture.loadFromFile(tilepath)) {
 			std::cout << "Error loading L shape tile";
 		}
+		char tilepath2[27] = "./Textures/TileOutline.png";
+		if (!TileOutlineTexture.loadFromFile(tilepath2)) {
+			std::cout << "Error loading Tile Outline";
+		}
+		Tile = sf::Sprite(Tiletexture);
+		TileOutline = sf::Sprite(TileOutlineTexture);
 		Tile = sf::Sprite(Tiletexture);
 		x = 4;
 		y = 0;
@@ -140,6 +152,12 @@ public:
 		if (!Tiletexture.loadFromFile(tilepath)) {
 			std::cout << "Error loading O shape tile";
 		}
+		char tilepath2[27] = "./Textures/TileOutline.png";
+		if (!TileOutlineTexture.loadFromFile(tilepath2)) {
+			std::cout << "Error loading Tile Outline";
+		}
+		Tile = sf::Sprite(Tiletexture);
+		TileOutline = sf::Sprite(TileOutlineTexture);
 		Tile = sf::Sprite(Tiletexture);
 		x = 4;
 		y = 0;
@@ -172,6 +190,12 @@ public:
 		if (!Tiletexture.loadFromFile(tilepath)) {
 			std::cout << "Error loading S shape tile";
 		}
+		char tilepath2[27] = "./Textures/TileOutline.png";
+		if (!TileOutlineTexture.loadFromFile(tilepath2)) {
+			std::cout << "Error loading Tile Outline";
+		}
+		Tile = sf::Sprite(Tiletexture);
+		TileOutline = sf::Sprite(TileOutlineTexture);
 		Tile = sf::Sprite(Tiletexture);
 		x = 4;
 		y = 0;
@@ -200,6 +224,12 @@ public:
 		if (!Tiletexture.loadFromFile(tilepath)) {
 			std::cout << "Error loading T shape tile";
 		}
+		char tilepath2[27] = "./Textures/TileOutline.png";
+		if (!TileOutlineTexture.loadFromFile(tilepath2)) {
+			std::cout << "Error loading Tile Outline";
+		}
+		Tile = sf::Sprite(Tiletexture);
+		TileOutline = sf::Sprite(TileOutlineTexture);
 		Tile = sf::Sprite(Tiletexture);
 		x = 4;
 		y = 0;
@@ -228,6 +258,12 @@ public:
 		if (!Tiletexture.loadFromFile(tilepath)) {
 			std::cout << "Error loading Z shape tile";
 		}
+		char tilepath2[27] = "./Textures/TileOutline.png";
+		if (!TileOutlineTexture.loadFromFile(tilepath2)) {
+			std::cout << "Error loading Tile Outline";
+		}
+		Tile = sf::Sprite(Tiletexture);
+		TileOutline = sf::Sprite(TileOutlineTexture);
 		Tile = sf::Sprite(Tiletexture);
 		x = 4;
 		y = 0;
