@@ -327,6 +327,7 @@ void Game::Update()
 	if (quit) {
 		FinalizeScores();
 	}
+	menu.SetTetrisColor();
 	score %= 8000;
 }
 
@@ -383,11 +384,11 @@ void Game::Render()
 	menu.PrintName(window);
 	menu.PrintTetris(window);
 	if (isnameentered) {
+		well.PrintBoard(window);//Print the actual board for playing
 		menu.PrintPlayers(window, highscorenames, highscoreint);//Print the leaderboard and previous highscores
 		menu.PrintScore(window, totalscore);//Print the current score
 		menu.PrintLevel(window, totalscore);//Print the current level
 		menu.PrintLines(window, totalscore);
-		well.PrintBoard(window);//Print the actual board for playing
 		//Print the Block where the next tetromino to come will be printed
 		menu.PrintTetriminoBlock(window);
 		NextBlock->DrawTetriminoatCoordinates(window, nextTx, nextTy);

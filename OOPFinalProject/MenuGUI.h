@@ -16,7 +16,7 @@ private:
 	sf::Text TETRIS,scoreText, levelText, levelNum, scoreNum, lineText, lineNum, Tetromino, QuitText,Restart;
 	sf::Text Highscore, Playernames[5], Playernumbers[5];
 	sf::Text NameText;
-
+	sf::Clock TetrisColorClock;
 	sf::Sprite EndingSkullSprite[2];
 	sf::Texture EndingSkullTexture[2];
 	//coordinates for easy repositioning of gui elements
@@ -32,6 +32,7 @@ public:
 	MenuGUI();
 	~MenuGUI();
 	void initializePlayerGUI(int*);
+	void SetTetrisColor();
 	void PrintTetris(sf::RenderWindow*&window);
 	void PrintNameEnter(sf::RenderWindow*& window);
 	void PrintName(sf::RenderWindow*& window);
