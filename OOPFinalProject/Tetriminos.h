@@ -10,9 +10,9 @@ protected:
 	int rows, columns; //integers used to store the rows and columns of the dynamic array
 	int x, y; //The actual positions of the tetromino relative to the board, 0,0 at top left.
 	int index;//The value of the blocks of the tetromino, 1 for the first, 3 for the second etc. Used to check for the pivot block
-	bool controllable;
-	sf::Sprite Tile;
-	sf::Texture Tiletexture;
+	bool controllable,abouttoset;
+	sf::Sprite Tile,TileWhite;
+	sf::Texture Tiletexture,TileTextureWhite;
 public:
 	Tetrimino() :x(0), y(0), controllable(1), rows(0), columns(0)
 	{};
@@ -37,12 +37,19 @@ class Ishape :public Tetrimino {
 
 public:
 	Ishape() {
+		abouttoset = 0;
+		controllable = 1;
 		char tilepath[21] = "./Textures/Tile1.png";
 		tilepath[15] = 2+48;
 		if (!Tiletexture.loadFromFile(tilepath)) {
 			std::cout << "Error loading I shape tile";
 		}
+		tilepath[11] ='W';
+		if (!TileTextureWhite.loadFromFile(tilepath)) {
+			std::cout << "Error loading I shape tile";
+		}
 		Tile=sf::Sprite(Tiletexture);
+		TileWhite = sf::Sprite(TileTextureWhite);
 		x = 4;
 		y = 0;
 		rows = 4;
@@ -67,6 +74,8 @@ public:
 class Jshape :public Tetrimino {
 public:
 	Jshape() {
+		abouttoset = 0;
+		controllable = 1;
 		char tilepath[21] = "./Textures/Tile1.png";
 		tilepath[15] = 3+48;
 		if (!Tiletexture.loadFromFile(tilepath)) {
@@ -95,6 +104,8 @@ public:
 class Lshape :public Tetrimino {
 public:
 	Lshape() {
+		abouttoset = 0;
+		controllable = 1;
 		char tilepath[21] = "./Textures/Tile1.png";
 		tilepath[15] = 4+48;
 		if (!Tiletexture.loadFromFile(tilepath)) {
@@ -122,6 +133,8 @@ public:
 class Oshape :public Tetrimino {
 public:
 	Oshape() {
+		abouttoset = 0;
+		controllable = 1;
 		char tilepath[21] = "./Textures/Tile1.png";
 		tilepath[15] = 5+48;
 		if (!Tiletexture.loadFromFile(tilepath)) {
@@ -152,6 +165,8 @@ public:
 class Sshape :public Tetrimino {
 public:
 	Sshape() {
+		abouttoset = 0;
+		controllable = 1;
 		char tilepath[21] = "./Textures/Tile1.png";
 		tilepath[15] = 6+48;
 		if (!Tiletexture.loadFromFile(tilepath)) {
@@ -178,6 +193,8 @@ public:
 class Tshape :public Tetrimino {
 public:
 	Tshape() {
+		abouttoset = 0;
+		controllable = 1;
 		char tilepath[21] = "./Textures/Tile1.png";
 		tilepath[15] = 7+48;
 		if (!Tiletexture.loadFromFile(tilepath)) {
@@ -204,6 +221,8 @@ public:
 class Zshape :public Tetrimino {
 public:
 	Zshape() {
+		abouttoset = 0;
+		controllable = 1;
 		char tilepath[21] = "./Textures/Tile1.png";
 		tilepath[15] = 8+48;
 		if (!Tiletexture.loadFromFile(tilepath)) {
